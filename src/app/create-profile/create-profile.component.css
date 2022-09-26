@@ -1,0 +1,358 @@
+body {
+    font-family: inherit;
+    line-height: inherit;
+  }
+  #p1{
+      font-size: 14px;
+      margin-top: 5px;
+  }
+  #nav {
+    background-color: #1c1e21;
+    color:#606770;
+    height: 60px;
+    width: 100%;
+  }
+  #nav1 {
+    padding-top: 15px;
+    padding-left: 64px;
+    padding-right: 64px;
+    display: flex;
+    justify-content: space-between;
+  }
+  #nav1 img {
+    height: 34px;
+    width: 32px;
+    object-fit: cover;
+  }
+  #main {
+    font-family: inherit;
+    line-height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(25, 25, 25, 1);
+    padding-top: 24px;
+    padding-bottom: 64px;
+  }
+  #login1 {
+    width: 400px;
+    padding: 32px;
+    --tw-bg-opacity: 1;
+    background-color: #252525;
+    color:#7e7e7e;
+    border-radius: 8px;
+  }
+  #login2 {
+    color: var(--dark-color);
+    font-weight: 700;
+    font-size: 20px;
+    font-family: Inter, sans-serif;
+    width: 100%;
+  }
+  .username1{
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    --tw-border-opacity: 1;
+    display: block;
+}
+
+  .username {
+    color:#ffffff;
+    padding-right: 32px;
+    /* padding-left: 16px; */
+    background-color: #5f5f5f;
+    border: 1px solid transparent;
+    height: 40px;
+    border-radius: 0;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Inter,sans-serif;
+    padding: 16px;
+    width: 100%;
+    /* line-height: inherit;
+    color: inherit; */
+  }
+
+  .gender1{
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    --tw-border-opacity: 1;
+    display: block;
+}
+
+    :host ::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: #5f5f5f;
+    border: none;
+}
+
+    :host ::ng-deep .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    padding-top: 4px;
+    height: 100%;
+}
+
+:host ::ng-deep .ant-form-item-label>label{
+  color:#ffffff;
+}
+
+  .gender {
+    color:#ffffff;
+    padding-right: 32px;
+    /* padding-left: 16px; */
+    background-color: #5f5f5f;
+    border: 1px solid transparent;
+    height: 40px;
+    border-radius: 0;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Inter,sans-serif;
+    width: 100%;
+    /* line-height: inherit;
+    color: inherit; */
+  }
+
+  #inputbio:focus{
+      background-color: rgba(255,255,255,var(--tw-bg-opacity));
+      border: 0px solid transparent;
+      height: 40px;
+      border-radius: 0;
+      border-color: #40a9ff;
+      box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
+      border-right-width: 1px;
+      outline: 0;
+      
+      
+    
+  }
+  .username:focus{
+    color: #ffffff;
+    background-color: #5f5f5f;
+    border: 0px solid transparent;
+    height: 40px;
+    border-radius: 0;
+  }
+  .cssform:focus{
+    background-color: rgba(255,255,255,var(--tw-bg-opacity));
+    border: 0px solid transparent;
+    height: 40px;
+    border-radius: 0;
+  }
+  .password:focus{
+      background-color: rgba(255,255,255,var(--tw-bg-opacity));
+  
+  }
+  #biolink {
+      border: 1px solid transparent;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      margin-top: -10px;
+      position: relative;
+      --tw-border-opacity: 1;
+      /* border-color: rgba(229,231,235,var(--tw-border-opacity)); */
+  }
+  .bio{
+      top: 11px;
+      left: 16px;
+      font-weight: 400;
+      font-weight: 400;
+      position: absolute;
+      font-size: 14px;
+      font-family: Inter,sans-serif;
+  
+  }
+  #inputbio1{
+      border: 1px solid transparent;
+      border-radius: 4px;
+      overflow: hidden;
+      --tw-border-opacity: 1;
+      display: block;
+  }
+  #inputbio{
+      padding-right: 32px;
+      /* padding-left: 16px; */
+      background-color: rgba(13,12,34,.05);
+      border: 1px solid transparent;
+      height: 40px;
+      border-radius: 0;
+      font-weight: 400;
+      font-size: 14px;
+      font-family: Inter,sans-serif;
+      padding: 16px;
+      width: 100%;
+      /* line-height: inherit;
+      color: inherit; */
+  }
+  .cssform {
+    background-color: rgba(13, 12, 34, 0.05);
+    border: 1px solid transparent;
+    height: 40px;
+    border-radius: 0;
+    padding-right: 32px;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Inter, sans-serif;
+    padding: 16px;
+  }
+  #button1 {
+    transition: 0.25s ease-in-out;
+    min-width: 96px;
+    height: 40px;
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    background: linear-gradient(112.44deg, #444444 2.09%, #050505 75.22%);
+    background-size: 165%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 17px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    width: 100%;
+    /* margin-top: 10px; */
+    border:solid 1px #7e7e7e;
+  }
+  #button1:hover {
+    background: linear-gradient(0.351turn, #050505 23.71%, #444444 78.8%);
+    background-size: 165%;
+    animation-name: bg-anim;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+  }
+  .or {
+    align-items: center;
+    display: flex;
+    margin-top: 24px;
+  }
+  .or1 {
+    background-color: rgba(13, 12, 34, 0.05);
+    height: 1px;
+    width: 50%;
+    margin-right: 16px;
+  }
+  .or2 {
+    color: var(--grey-color);
+    font-weight: 400;
+    font-size: 14px;
+    font-family: Inter, sans-serif;
+  }
+  .social {
+    margin-top: 32px;
+  }
+  .social0 {
+    margin-top: 16px;
+  }
+  .social0 a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  .social0:hover {
+    transform: translateZ(0) scale(1.015);
+  }
+  .social:hover {
+    transform: translateZ(0) scale(1.015);
+  }
+  .social a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  .social1 {
+    height: 40px;
+    transition: transform 0.15s cubic-bezier(0.17, 0.67, 0.29, 2.71) 0s;
+    border: 1.5px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+    background-color: transparent;
+    background-image: none;
+  }
+  .social2 {
+    display: flex;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: inherit;
+    text-transform: none;
+    font-family: inherit;
+  }
+  .logo2 {
+    margin-right: 8px;
+    align-items: center;
+    width: 16px;
+    height: 16;
+    fill: none;
+    overflow: hidden;
+    font-size: 14px;
+    display: flex;
+    vertical-align: middle;
+    --tw-border-opacity: 1;
+    border-color: rgba(229, 231, 235, var(--tw-border-opacity));
+  }
+  .social3 {
+    text-align: left;
+    width: 165px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: inherit;
+    text-transform: none;
+    font-family: inherit;
+  }
+  #forgot {
+    text-align: center;
+  }
+  
+  .login-form {
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .login-form-margin {
+    margin-bottom: 16px;
+  }
+  
+  .login-form-forgot {
+    float: right;
+  }
+  
+  .login-form-button {
+    width: 100%;
+  }
+  .title1{
+    font-size: 16px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+  }
+
+  #p1{
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .erorr {
+    color: red;
+  }
+
+  .text{
+    color: #ffffff;
+  }
+
+  :host ::ng-deep .avatar-uploader > .ant-upload {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: #7e7e7e;
+  }
+
+  .avatar{
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+  
