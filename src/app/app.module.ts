@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { AuthInterceptor } from './_helpers/auth.interceptor';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { PersonalInfomationComponent } from './personal-infomation/personal-infomation.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     CreateProfileComponent,
     ProfileComponent,
     ChatComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    PersonalInfomationComponent
   ],
   imports: [
     BrowserModule,
