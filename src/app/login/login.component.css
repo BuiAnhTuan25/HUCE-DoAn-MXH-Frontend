@@ -31,8 +31,8 @@ body {
     align-items: center;
     justify-content: center;
     background-color: rgba(25, 25, 25, 1);
-    padding-top: 24px;
-    padding-bottom: 64px;
+    padding-top: 23px;
+    padding-bottom: 80px;
   }
   .username:focus{
     color: #ffffff;

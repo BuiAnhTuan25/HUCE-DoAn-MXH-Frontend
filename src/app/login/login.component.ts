@@ -13,6 +13,7 @@ import {
   SocialUser,
 } from 'angularx-social-login';
 import { OauthService } from '../_service/oauth-service/oauth.service';
+import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,6 @@ export class LoginComponent implements OnInit {
   isLoading: boolean = false;
   socialUser!:SocialUser;
   errorMessage = '';
-  roles: string[] = [];
 
   constructor(
     private tokenStorage: TokenStorageService,
@@ -39,12 +39,11 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private socialAuthService: SocialAuthService,
     private oauthService:OauthService,
-    //private websocket:WebsocketService,
+    private websocket:WebsocketService,
   ) {}
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
-      this.roles = this.tokenStorage.getUser().roles;
     }
     this.validateForm = this.fb.group({
       username: ['', [Validators.required, NoSpace]],
@@ -58,7 +57,6 @@ export class LoginComponent implements OnInit {
       this.socialUser = user;
       this.isLoggedIn = user != null;
     });
-    //this.websocket._connect();
   }
 
   submitForm(): void {
@@ -76,7 +74,6 @@ export class LoginComponent implements OnInit {
             this.tokenStorage.saveUser(data.data.user);
             this.isLoginFailed = false;
             this.isLoggedIn = true;
-            this.roles = this.tokenStorage.getUser().roles;
             if(data.data.user.is_profile){
               this.router.navigate(['/home']);
             } else this.router.navigate(['/create-profile']);
@@ -140,7 +137,6 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveUser(res.data.user);
           this.isLoginFailed = false;
           this.isLoggedIn = true;
-          this.roles = this.tokenStorage.getUser().roles;
           if(res.data.user.is_profile){
             this.router.navigate(['/home']);
           } else this.router.navigate(['/create-profile']);
@@ -167,7 +163,6 @@ export class LoginComponent implements OnInit {
             this.tokenStorage.saveUser(res.data.user);
             this.isLoginFailed = false;
             this.isLoggedIn = true;
-            this.roles = this.tokenStorage.getUser().roles;
             if(res.data.user.is_profile){
               this.router.navigate(['/home']);
             } else this.router.navigate(['/create-profile']);

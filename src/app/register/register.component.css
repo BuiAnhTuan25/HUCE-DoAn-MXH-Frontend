@@ -32,7 +32,7 @@ body {
     justify-content: center;
     background-color: rgba(25, 25, 25, 1);
     padding-top: 24px;
-    padding-bottom: 64px;
+    padding-bottom: 1%;
   }
   #login1 {
     width: 400px;
@@ -71,9 +71,17 @@ body {
       box-shadow: 0 0 0 2px rgba(104, 104, 104, 0.2);
       border-right-width: 1px;
       outline: 0;
-      
-      
-    
+  }
+  .email-input:focus{
+    color: #ffffff;
+    background-color: #5f5f5f;
+      border: 0px solid transparent;
+      height: 40px;
+      border-radius: 0;
+      border-color: #000000;
+      box-shadow: 0 0 0 2px rgba(104, 104, 104, 0.2);
+      border-right-width: 1px;
+      outline: 0;
   }
   .username:focus{
       background-color: rgba(255,255,255,var(--tw-bg-opacity));
@@ -133,6 +141,22 @@ body {
       width: 100%;
       /* line-height: inherit;
       color: inherit; */
+  }
+  .email-input{
+      color:#ffffff;
+        padding-right: 32px;
+        /* padding-left: 16px; */
+        background-color: #5f5f5f;
+        border: 1px solid transparent;
+        height: 40px;
+        border-radius: 0;
+        font-weight: 400;
+        font-size: 14px;
+        font-family: Inter,sans-serif;
+        padding: 16px;
+        width: 100%;
+        /* line-height: inherit;
+        color: inherit; */
   }
   .cssform {
     background-color: rgba(13, 12, 34, 0.05);
@@ -280,4 +304,17 @@ body {
     font-family: Inter, sans-serif;
     font-weight: 500;
   }
+  .overflow-y{
+    position: relative;
+    height: 100%; 
+    overflow: hidden auto;
+}
+.overflow-y::-webkit-scrollbar { 
+    width: 0 !important;
+    display: none; 
+}
+
+:host ::ng-deep .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input{
+  background-color: #5f5f5f;
+}
   

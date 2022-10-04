@@ -1,0 +1,106 @@
+<div class="main">
+  <div class="chat-with">
+    <div class="friend" nz-row>
+      <div nz-col nzSpan="3">
+        <img
+          class="avatar"
+          [src]="chatWith.avatar"
+          alt="avatar"
+        />
+      </div>
+      <div class="name-friend" nz-col nzSpan="18">
+        <div>{{chatWith.name}}</div>
+        <div class="online" nz-col nzSpan="18">Online</div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="overflow-y" #content>
+      <ul id="my-ul-element">
+        <div #messages *ngFor="let message of listMessages">
+          <li class="clearfix" *ngIf="message.sender_id == chatWith.id">
+            <div>
+              <img
+                class="avatar-message-receiver"
+                [src]="message.avatar_url"
+                alt="avatar"
+              />
+              <div
+                class="receiver-message"
+                nz-tooltip
+                [nzTooltipTitle]="message.send_time"
+                nzTooltipPlacement="right"
+              >
+                {{ message.content }}
+              </div>
+            </div>
+          </li>
+          <li class="clearfix" *ngIf="message.sender_id == user.id">
+            <div>
+              <img
+                class="avatar-message-send"
+                [src]="message.avatar_url"
+                alt="avatar"
+              />
+              <div
+                class="send-message"
+                nz-tooltip
+                [nzTooltipTitle]="message.send_time"
+                nzTooltipPlacement="left"
+              >
+                {{ message.content }}
+              </div>
+            </div>
+          </li>
+        </div>
+        <div *ngFor="let message of websocket.receiverMessage">
+          <li class="clearfix" *ngIf="message.sender_id == chatWith.id">
+            <div>
+              <img
+                class="avatar-message-receiver"
+                [src]="chatWith.avatar"
+                alt="avatar"
+              />
+              <div
+                class="receiver-message"
+                nz-tooltip
+                [nzTooltipTitle]="message.send_time"
+                nzTooltipPlacement="right"
+              >
+                {{ message.content }}
+              </div>
+            </div>
+          </li>
+          <li class="clearfix" *ngIf="message.sender_id == user.id">
+            <div>
+              <img
+                class="avatar-message-send"
+                [src]="profile!.avatar_url"
+                alt="avatar"
+              />
+              <div
+                class="send-message"
+                nz-tooltip
+                [nzTooltipTitle]="message.send_time"
+                nzTooltipPlacement="left"
+              >
+                {{ message.content }}
+              </div>
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+  <div class="send">
+    <div nz-row style="padding-top: 2%">
+      <div nz-col nzSpan="1"></div>
+      <div nz-col nzSpan="20">
+        <input nz-input [(ngModel)]="contentMessage" type="text" (keyup.enter)="sendMessage()" placeholder="Type messages" />
+      </div>
+      <div nz-col nzSpan="3" class="icon">
+        <i (click)="sendMessage()" class="fa-solid fa-paper-plane icon-send"></i>
+      </div>
+    </div>
+  </div>
+</div>

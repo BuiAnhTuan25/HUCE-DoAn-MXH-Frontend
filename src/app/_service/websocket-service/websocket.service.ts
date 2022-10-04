@@ -6,13 +6,13 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   providedIn: 'root'
 })
 export class WebsocketService {
-
+    receiverMessage:any[]=[];
     constructor(private msg:NzMessageService){}
     user:any=JSON.parse(localStorage.getItem('auth-user')!);
     // authToken:any=localStorage.getItem('auth-token')!;
-    webSocketEndPoint: string = 'http://localhost:8080/notification';
+    webSocketEndPoint: string = 'http://localhost:8080/message';
 
-    queue: string = '/queue/notification/' ;
+    queue: string = '/topic/receiver/' ;
     stompClient: any;
     
     _connect(idUser:number) {
@@ -49,14 +49,13 @@ export class WebsocketService {
   * @param {*} message 
   */
     _send(message:any) {
-        this.stompClient.send("/queue/notification/"+message.to, {}, JSON.stringify(message));
+        this.stompClient.send("/app/chat/"+message.receiver_id, {}, JSON.stringify(message));
     }
 
 
     onMessageReceived(message:any) {
-        if(this.user){
-            this.msg.success(message.body);
-        }
+        let msg:any=JSON.parse(message.body);
+        this.receiverMessage.push(msg);
     }
 
 }
