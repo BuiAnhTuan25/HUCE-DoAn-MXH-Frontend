@@ -18,7 +18,7 @@ export class ProfileService {
 
   createProfile(profile: any, file?: any): Observable<any> {
     const formdata = new FormData();
-    formdata.append('file', file);
+    formdata.append('avatar', file);
     formdata.append('id', profile.id);
     formdata.append('name', profile.name);
     formdata.append('phoneNumber', profile.phone_number);
@@ -35,7 +35,7 @@ export class ProfileService {
 
   updateProfile(profile: any, id: number, file?: any): Observable<any> {
     const formdata = new FormData();
-    formdata.append('file', file);
+    formdata.append('avatar', file);
     formdata.append('id', profile.id);
     formdata.append('name', profile.name);
     formdata.append('phoneNumber', profile.phone_number);

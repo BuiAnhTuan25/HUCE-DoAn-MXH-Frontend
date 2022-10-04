@@ -12,7 +12,8 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body class="overflow-y">
+    <nz-affix [nzOffsetTop]="0">
     <div id="nav">
       <div id="nav1">
         <div>
@@ -26,6 +27,7 @@
         </div>
       </div>
     </div>
+  </nz-affix>
     <div id="main">
       <div id="login1">
         <form nz-form [formGroup]="validateForm" class="login-form">
@@ -37,7 +39,7 @@
                 nz-input
                 formControlName="email"
                 placeholder="Email"
-                class="inputbio"
+                class="email-input"
               />
             </nz-form-control>
           </nz-form-item>

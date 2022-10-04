@@ -3,10 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { Observable, Observer } from 'rxjs';
+import { forkJoin, Observable, Observer } from 'rxjs';
+import { PHONE_NUMBER_REGEX } from '../_helpers/validator';
 import { GENDER } from '../_model/gender';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
+import { UserService } from '../_service/user-service/user.service';
 
 @Component({
   selector: 'app-create-profile',
@@ -27,6 +29,7 @@ export class CreateProfileComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
+    private userService: UserService,
     private router: Router,
     private msg: NzMessageService,
     private auth:AuthenticationService,
@@ -37,7 +40,7 @@ export class CreateProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       id: [this.user.id],
       name: ['', Validators.required],
-      phone_number: ['',Validators.required],
+      phone_number: ['',Validators.required,Validators.pattern(PHONE_NUMBER_REGEX)],
       birthday: ['', Validators.required],
       gender: [GENDER.MALE, Validators.required],
       avatar_url: [''],
@@ -74,11 +77,19 @@ export class CreateProfileComponent implements OnInit {
       .subscribe((res: any) => {
         if (res.success) {
             this.msg.success('Create profile successfully');
+            this.updateUser(this.user);
             this.router.navigate(['/home']);
         } else this.msg.error('Create profile failed!');
       });
     }
     
+  }
+
+  updateUser(user:any){
+    user.is_profile=true;
+    this.userService.updateUser(user,user.id).subscribe((res:any)=>{
+      localStorage.setItem('auth-user',res.data);
+    })
   }
 
   beforeUpload = (

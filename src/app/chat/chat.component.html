@@ -1,1 +1,62 @@
-<p>chat works!</p>
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="overflow-y">
+    <nz-affix [nzOffsetTop]="0">
+      <div id="nav">
+        <div id="nav1">
+          <div>
+            <img
+              src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+              alt="logo"
+            />
+          </div>
+          <div></div>
+
+          <div class="div-icon">
+            <i (click)="onClickHome()" class="fa-solid fa-house icon"></i>
+          </div>
+          <div>
+            <i (click)="onClickProfile()" class="fa-solid fa-user icon"></i>
+          </div>
+          <div>
+            <i class="fa-brands fa-facebook-messenger icon icon-select"></i>
+          </div>
+          <div></div>
+
+          <div>
+            <a style="color: #1890ff" (click)="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nz-affix> -->
+    <div id="main">
+      <div nz-row>
+        <div nz-col nzSpan="6">
+          <app-list-chat
+            (sendChatWith)="receiverChatWith($event)"
+          ></app-list-chat>
+        </div>
+        <div nz-col nzSpan="12">
+          <app-chat-content
+            *ngIf="chatWith"
+            [chatWith]="chatWith"
+            [listMessages]="listMessages"
+          ></app-chat-content>
+        </div>
+        <div nz-col nzSpan="6"><app-list-user-group></app-list-user-group></div>
+      </div>
+    </div>
+  <!-- </body>
+</html> -->

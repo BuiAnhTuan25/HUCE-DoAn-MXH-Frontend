@@ -1,1 +1,68 @@
-<p>profile works!</p>
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div>
+    <nz-affix [nzOffsetTop]="0">
+    <div id="nav">
+      <div id="nav1">
+        <div>
+          <img
+            src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+            alt="logo"
+          />
+        </div>
+        <div></div>
+        <div >
+          <i (click)="onClickHome()" class="fa-solid fa-house icon"></i>
+        </div>
+        <div>
+          <i class="fa-solid fa-user icon icon-select"></i>
+        </div>
+        <div>
+          <i (click)="onClickChat()" class="fa-brands fa-facebook-messenger icon"></i>
+        </div>
+        <div></div>
+        <div>
+          <a style="color: #1890ff" (click)="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nz-affix>
+  
+</div> -->
+
+    <div id="main">
+      <div class="overflow-y">
+      <div nz-row class="infomation">
+        <app-personal-infomation [profile]="profile"></app-personal-infomation>
+      </div>
+      <div nz-row class="tabs">
+        <nz-tabset class="tabset">
+          <nz-tab [nzTitle]="postTitle"><app-posts></app-posts></nz-tab>
+          <nz-tab [nzTitle]="friendsTitle"><app-friends></app-friends></nz-tab>
+        </nz-tabset>
+        <ng-template #postTitle>
+          <div class="title">Posts</div>
+        </ng-template>
+        <ng-template #friendsTitle>
+          <div class="title">Friends</div>
+        </ng-template>
+      </div>
+    </div>
+    </div>
+  <!-- </body>
+</html> -->
+
+

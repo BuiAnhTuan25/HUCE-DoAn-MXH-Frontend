@@ -1,0 +1,68 @@
+.avatar{
+    margin-top: 8%;
+    margin-left: 20%;
+    border-radius: 50%;
+    width: 170px;
+    height: 170px;
+  }
+.infomation{
+    margin-top: 1.5%;
+}
+#username{
+    font-size: 30px;
+    color:#ffffff;
+}
+#friends{
+    font-size: 14px;
+    color:#ffffff;
+}
+#name{
+    font-size: 18px;
+    color:#ffffff;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.about{
+    font-size: 12px;
+    color:#ffffff;
+    margin-top: 5px;
+}
+.change-password{
+    font-size: 14px;
+    color:#1890ff;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.button-change{
+    border-radius: 5px;
+    margin-top: 10px;
+    float:right;
+}
+.button-add{
+    width:120px;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+.icon{
+    margin-right: 10px;
+}
+
+:host ::ng-deep .avatar-uploader > .ant-upload {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: #7e7e7e;
+  }
+
+  .avatar-edit{
+    width: 100px;
+    height: 100px;
+  }
+  :host ::ng-deep .ant-modal-header{
+    background-color: #1c1e21;
+    color:#ffffff;
+  }
+  :host ::ng-deep .ant-modal-body{
+    background-color: rgba(25, 25, 25, 1);
+    color:#ffffff;
+  }
