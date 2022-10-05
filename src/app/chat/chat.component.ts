@@ -43,6 +43,8 @@ export class ChatComponent implements OnInit,OnDestroy {
         if (res.success) {
           this.listMessages = res.data;
         } else this.msg.error('Get list message failed!');
+      },err =>{
+        this.msg.error(err);
       });
   }
 

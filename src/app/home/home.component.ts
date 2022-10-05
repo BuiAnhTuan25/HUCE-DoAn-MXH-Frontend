@@ -26,9 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private tokenStorage: TokenStorageService
   ) {}
 
-   async ngOnInit() {
+   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
-    await this.getProfile(this.user.id);
+    this.getProfile(this.user.id);
     this.websocket._connect(this.user.id);
     
   }
@@ -37,13 +37,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.websocket._disconnect();
   }
 
-  async getProfile(id: number) {
-  const res:any = await  this.profileService.getProfile(id).toPromise();
-        if (res.success) {
-          this.profile = res.data;
-          this.tokenStorage.savePofileUser(this.profile);
-        } else this.msg.error('Get profile failed!');
-      }
+  getProfile(id: number) {
+    this.profileService.getProfile(id).subscribe(res=>{
+      if (res.success) {
+        this.profile = res.data;
+        this.tokenStorage.savePofileUser(this.profile);
+      } else this.msg.error('Get profile failed!');
+    },err => {
+      this.msg.error(err);
+    });
+  }
+        
 
   onClickProfile() {
     this.selectIndex=1;

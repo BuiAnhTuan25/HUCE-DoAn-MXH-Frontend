@@ -80,6 +80,8 @@ export class CreateProfileComponent implements OnInit {
             this.updateUser(this.user);
             this.router.navigate(['/home']);
         } else this.msg.error('Create profile failed!');
+      },err =>{
+        this.msg.error(err);
       });
     }
     

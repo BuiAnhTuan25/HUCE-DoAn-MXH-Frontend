@@ -70,6 +70,8 @@ export class PersonalInfomationComponent implements OnInit {
       if (res.success) {
         this.friend = res.data;
       } else this.msg.error('Get friend failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -78,6 +80,8 @@ export class PersonalInfomationComponent implements OnInit {
       if (res.success) {
         this.profile = res.data;
       } else this.msg.error('Get profile failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -90,6 +94,8 @@ export class PersonalInfomationComponent implements OnInit {
       if (res.success) {
         this.friend = res.data;
       } else this.msg.error('Add friend failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -102,6 +108,8 @@ export class PersonalInfomationComponent implements OnInit {
           this.friend = res.data;
           this.msg.success('Add friend successfully!');
         } else this.msg.error('Add friend failed!');
+      },err =>{
+        this.msg.error(err);
       });
   }
 
@@ -111,6 +119,8 @@ export class PersonalInfomationComponent implements OnInit {
         this.friend = null;
         this.msg.success('Delete friend successfully!');
       } else this.msg.error('Delete friend failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -181,6 +191,9 @@ export class PersonalInfomationComponent implements OnInit {
         this.isLoading=false;
         this.msg.error('Update personal information failed!')
       }
+    },err => {
+      this.isLoading=false;
+      this.msg.error(err);
     });
   }
 }
@@ -233,6 +246,9 @@ export class PersonalInfomationComponent implements OnInit {
           this.isLoading=false;
           this.msg.error(res.message);
         }
+      },err => {
+        this.isLoading=false;
+          this.msg.error(err);
       });
   }
 }

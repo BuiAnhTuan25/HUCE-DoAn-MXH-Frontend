@@ -26,7 +26,9 @@ export class ListChatComponent implements OnInit {
       if(res.success){
         this.friends=res.data;
       } else this.msg.error('Get list friend failed');
-    })
+    },err =>{
+      this.msg.error(err);
+    });
   }
 
   onClickChat(chat:any,i:number){
