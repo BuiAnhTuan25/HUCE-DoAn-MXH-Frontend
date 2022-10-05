@@ -79,6 +79,9 @@ export class RegisterComponent implements OnInit {
           this.msg.error(res.message);
           this.isLoading=false;
         }
+      },err => {
+        this.msg.error(err);
+        this.isLoading=false;
       });
     }
   }
@@ -167,6 +170,10 @@ handleOk() {
           this.msg.error(res.message);
           this.handleCancel();
         }
+      },err => {
+        this.isLoadingSend = false;
+          this.msg.error(err);
+          this.handleCancel();
       });
   }
 }

@@ -47,13 +47,8 @@ export class AuthenticationService {
     });
   }
 
-  changePassword(code: string, newPass: string): Observable<any> {
-    let param = new HttpParams();
-    param = param.append('code', code);
-    param = param.append('password', newPass);
-    return this.http.post(AUTH_API + '/update-password-token', null, {
-      params: param,
-    });
+  changePassword(id: number, pass: any): Observable<any> {
+    return this.http.put(AUTH_API + '/change-password/'+id, pass);
   }
 
   sendEmailForgotPassword(mail: string): Observable<any> {

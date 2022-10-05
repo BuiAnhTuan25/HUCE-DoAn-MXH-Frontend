@@ -4,6 +4,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { NoSpace, PHONE_NUMBER_REGEX } from '../_helpers/validator';
+import { AuthenticationService } from '../_service/auth-service/authentication.service';
+import { DataService } from '../_service/data-service/data.service';
 import { FriendService } from '../_service/friend-service/friend.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { TokenStorageService } from '../_service/token-storage-service/token-storage.service';
@@ -15,7 +17,7 @@ import { UserService } from '../_service/user-service/user.service';
   styleUrls: ['./personal-infomation.component.css'],
 })
 export class PersonalInfomationComponent implements OnInit {
-  @Input() profile: any;
+  profile: any={};
   isPublic = true;
   user: any;
   friend: any;
@@ -28,14 +30,15 @@ export class PersonalInfomationComponent implements OnInit {
   isLoading:boolean=false;
   isVisiblePassword:boolean=false;
   confirmPassword:boolean=false;
-  checkPassword:boolean=false;
   constructor(
     private friendService: FriendService,
     private msg: NzMessageService,
     private profileService: ProfileService,
     private fb: FormBuilder,
     private userService: UserService,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private auth:AuthenticationService,
+    private dataService: DataService
   ) {}
 
 
@@ -57,6 +60,9 @@ export class PersonalInfomationComponent implements OnInit {
     confirmPassword: ['', [Validators.required, NoSpace]],
 })
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
+    this.dataService.receiveProfile.subscribe(
+      (profile) => (this.profile = profile)
+    );
     
     // this.getProfile(this.profileId);
     // if (this.user.id != this.profileId) {
@@ -69,6 +75,8 @@ export class PersonalInfomationComponent implements OnInit {
       if (res.success) {
         this.friend = res.data;
       } else this.msg.error('Get friend failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -77,6 +85,8 @@ export class PersonalInfomationComponent implements OnInit {
       if (res.success) {
         this.profile = res.data;
       } else this.msg.error('Get profile failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -89,6 +99,8 @@ export class PersonalInfomationComponent implements OnInit {
       if (res.success) {
         this.friend = res.data;
       } else this.msg.error('Add friend failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -101,6 +113,8 @@ export class PersonalInfomationComponent implements OnInit {
           this.friend = res.data;
           this.msg.success('Add friend successfully!');
         } else this.msg.error('Add friend failed!');
+      },err =>{
+        this.msg.error(err);
       });
   }
 
@@ -110,6 +124,8 @@ export class PersonalInfomationComponent implements OnInit {
         this.friend = null;
         this.msg.success('Delete friend successfully!');
       } else this.msg.error('Delete friend failed!');
+    },err =>{
+      this.msg.error(err);
     });
   }
 
@@ -171,14 +187,18 @@ export class PersonalInfomationComponent implements OnInit {
 
     this.profileService.updateProfile(this.editForm.value,this.editForm.controls['id'].value,this.file).subscribe((res)=>{
       if(res.success){
+        debugger
         this.isLoading=false;
         this.profile=res.data;
         this.isVisibleEdit=false;
-        this.msg.success('Update personal information successfully!')
+        this.msg.success('Update personal information successfully!');
       } else {
         this.isLoading=false;
         this.msg.error('Update personal information failed!')
       }
+    },err => {
+      this.isLoading=false;
+      this.msg.error(err);
     });
   }
 }
@@ -212,22 +232,28 @@ export class PersonalInfomationComponent implements OnInit {
     }
 
     this.checkConfirmPassword();
-    this.doCheckPassword();
 
-    if (this.passwordForm.valid && this.confirmPassword && this.checkPassword) {
+    if (this.passwordForm.valid && this.confirmPassword) {
       this.isLoading = true;
-      this.user.password=this.passwordForm.controls['newPassword'].value;
-      this.userService.updatePassword(this.user.id,this.user).subscribe((res)=>{
+      const password = {
+        old_password:this.passwordForm.controls['oldPassword'].value,
+        new_password:this.passwordForm.controls['newPassword'].value,
+      }
+      this.auth.changePassword(this.user.id,password).subscribe((res)=>{
         if(res.success){
           this.isLoading=false;
           this.tokenStorage.saveUser(res.data);
           this.user=res.data;
           this.isVisiblePassword=false;
+          this.auth.doLogout();
           this.msg.success('Change password successfully!');
         } else {
           this.isLoading=false;
-          this.msg.error('Change password failed!');
+          this.msg.error(res.message);
         }
+      },err => {
+        this.isLoading=false;
+          this.msg.error(err);
       });
   }
 }
@@ -243,17 +269,4 @@ export class PersonalInfomationComponent implements OnInit {
       this.confirmPassword = false;
     } else this.confirmPassword = true;
   }
-
-  doCheckPassword(){
-    console.log(this.passwordForm.controls['oldPassword'].value.getBase64())
-    if(this.passwordForm.controls['oldPassword'].value.getBase64()==this.user.password){
-      this.checkPassword=true;
-    } else {
-      this.checkPassword=false;
-      this.passwordForm.controls['oldPassword'].setErrors({
-        oldPasswordError: true,
-      });
-    }
-  }
-
 }

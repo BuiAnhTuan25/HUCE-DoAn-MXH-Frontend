@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
+import { DataService } from '../_service/data-service/data.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
@@ -17,19 +17,14 @@ export class ProfileComponent implements OnInit {
     private authService: AuthenticationService,
     private websocket: WebsocketService,
     private msg: NzMessageService,
+    private dataService: DataService
   ) {}
 
   ngOnInit(){
-    this.profile = JSON.parse(localStorage.getItem('profile-user')!);
+    this.dataService.receiveProfile.subscribe(
+      (profile) => (this.profile = profile)
+    );
   }
-
-  // onClickChat() {
-  //   this.router.navigate(['/chat']);
-  // }
-
-  // onClickHome() {
-  //   this.router.navigate(['/home']);
-  // }
 
   logout() {
     this.authService.doLogout();

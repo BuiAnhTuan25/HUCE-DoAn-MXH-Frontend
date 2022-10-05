@@ -67,8 +67,9 @@ export class LoginComponent implements OnInit {
     if (this.validateForm.valid) {
       this.isLoading = true;
       this.auth.login(this.validateForm.value).subscribe(
-        (data:any) => {
-          if(data.success){
+        (data) => {
+          console.log(data)
+          if(data.success && data.data){
             this.isLoading = false;
             this.tokenStorage.saveToken(data.data.jwt);
             this.tokenStorage.saveUser(data.data.user);
@@ -83,6 +84,10 @@ export class LoginComponent implements OnInit {
             this.msg.error('Incorrect username or password')
           }
           
+        },err => {
+          this.isLoginFailed = true;
+          this.isLoading = false;
+          this.msg.error('Incorrect account or password!');
         }
       );
     }
@@ -110,7 +115,7 @@ export class LoginComponent implements OnInit {
       this.auth
         .sendEmailForgotPassword(this.modalForm.controls['mail'].value)
         .subscribe((res: any) => {
-          if (res.success) {
+          if (res.success && res.data) {
             this.isLoadingSend = false;
             this.msg.success(
               'Send email forgot password successfully. Please access your email to check password!'
@@ -122,6 +127,10 @@ export class LoginComponent implements OnInit {
             this.msg.error(res.message);
             this.handleCancel();
           }
+        },err => {
+          this.isLoadingSend = false;
+          this.handleCancel();
+          this.msg.error(err);
         });
     }
   }
