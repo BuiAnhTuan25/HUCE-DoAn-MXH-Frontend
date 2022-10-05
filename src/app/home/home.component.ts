@@ -13,7 +13,7 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  selectIndex:number=0;
+  selectIndex: number = 0;
   profile: any = {};
   user: any;
   constructor(
@@ -26,11 +26,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     private tokenStorage: TokenStorageService
   ) {}
 
-   ngOnInit() {
+  ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
     this.getProfile(this.user.id);
     this.websocket._connect(this.user.id);
-    
   }
 
   ngOnDestroy(): void {
@@ -38,27 +37,29 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getProfile(id: number) {
-    this.profileService.getProfile(id).subscribe(res=>{
-      if (res.success) {
-        this.profile = res.data;
-        this.tokenStorage.savePofileUser(this.profile);
-      } else this.msg.error('Get profile failed!');
-    },err => {
-      this.msg.error(err);
-    });
+    this.profileService.getProfile(id).subscribe(
+      (res) => {
+        if (res.success) {
+          this.profile = res.data;
+          this.dataService.sendProfile(this.profile);
+        } else this.msg.error('Get profile failed!');
+      },
+      (err) => {
+        this.msg.error(err);
+      }
+    );
   }
-        
 
   onClickProfile() {
-    this.selectIndex=1;
+    this.selectIndex = 1;
   }
 
   onClickChat() {
-    this.selectIndex=2;
+    this.selectIndex = 2;
   }
 
-  onClickNewssFeed(){
-    this.selectIndex=0;
+  onClickNewssFeed() {
+    this.selectIndex = 0;
   }
 
   logout() {

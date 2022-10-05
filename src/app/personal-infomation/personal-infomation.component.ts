@@ -5,6 +5,7 @@ import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { NoSpace, PHONE_NUMBER_REGEX } from '../_helpers/validator';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
+import { DataService } from '../_service/data-service/data.service';
 import { FriendService } from '../_service/friend-service/friend.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { TokenStorageService } from '../_service/token-storage-service/token-storage.service';
@@ -16,7 +17,7 @@ import { UserService } from '../_service/user-service/user.service';
   styleUrls: ['./personal-infomation.component.css'],
 })
 export class PersonalInfomationComponent implements OnInit {
-  @Input() profile: any;
+  profile: any={};
   isPublic = true;
   user: any;
   friend: any;
@@ -36,7 +37,8 @@ export class PersonalInfomationComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private tokenStorage: TokenStorageService,
-    private auth:AuthenticationService
+    private auth:AuthenticationService,
+    private dataService: DataService
   ) {}
 
 
@@ -58,6 +60,9 @@ export class PersonalInfomationComponent implements OnInit {
     confirmPassword: ['', [Validators.required, NoSpace]],
 })
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
+    this.dataService.receiveProfile.subscribe(
+      (profile) => (this.profile = profile)
+    );
     
     // this.getProfile(this.profileId);
     // if (this.user.id != this.profileId) {
