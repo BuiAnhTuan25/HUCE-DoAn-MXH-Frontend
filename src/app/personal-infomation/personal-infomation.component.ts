@@ -4,6 +4,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { NoSpace, PHONE_NUMBER_REGEX } from '../_helpers/validator';
+import { AuthenticationService } from '../_service/auth-service/authentication.service';
 import { FriendService } from '../_service/friend-service/friend.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { TokenStorageService } from '../_service/token-storage-service/token-storage.service';
@@ -28,14 +29,14 @@ export class PersonalInfomationComponent implements OnInit {
   isLoading:boolean=false;
   isVisiblePassword:boolean=false;
   confirmPassword:boolean=false;
-  checkPassword:boolean=false;
   constructor(
     private friendService: FriendService,
     private msg: NzMessageService,
     private profileService: ProfileService,
     private fb: FormBuilder,
     private userService: UserService,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private auth:AuthenticationService
   ) {}
 
 
@@ -171,10 +172,11 @@ export class PersonalInfomationComponent implements OnInit {
 
     this.profileService.updateProfile(this.editForm.value,this.editForm.controls['id'].value,this.file).subscribe((res)=>{
       if(res.success){
+        debugger
         this.isLoading=false;
         this.profile=res.data;
         this.isVisibleEdit=false;
-        this.msg.success('Update personal information successfully!')
+        this.msg.success('Update personal information successfully!');
       } else {
         this.isLoading=false;
         this.msg.error('Update personal information failed!')
@@ -212,21 +214,24 @@ export class PersonalInfomationComponent implements OnInit {
     }
 
     this.checkConfirmPassword();
-    this.doCheckPassword();
 
-    if (this.passwordForm.valid && this.confirmPassword && this.checkPassword) {
+    if (this.passwordForm.valid && this.confirmPassword) {
       this.isLoading = true;
-      this.user.password=this.passwordForm.controls['newPassword'].value;
-      this.userService.updatePassword(this.user.id,this.user).subscribe((res)=>{
+      const password = {
+        old_password:this.passwordForm.controls['oldPassword'].value,
+        new_password:this.passwordForm.controls['newPassword'].value,
+      }
+      this.auth.changePassword(this.user.id,password).subscribe((res)=>{
         if(res.success){
           this.isLoading=false;
           this.tokenStorage.saveUser(res.data);
           this.user=res.data;
           this.isVisiblePassword=false;
+          this.auth.doLogout();
           this.msg.success('Change password successfully!');
         } else {
           this.isLoading=false;
-          this.msg.error('Change password failed!');
+          this.msg.error(res.message);
         }
       });
   }
@@ -243,17 +248,4 @@ export class PersonalInfomationComponent implements OnInit {
       this.confirmPassword = false;
     } else this.confirmPassword = true;
   }
-
-  doCheckPassword(){
-    console.log(this.passwordForm.controls['oldPassword'].value.getBase64())
-    if(this.passwordForm.controls['oldPassword'].value.getBase64()==this.user.password){
-      this.checkPassword=true;
-    } else {
-      this.checkPassword=false;
-      this.passwordForm.controls['oldPassword'].setErrors({
-        oldPasswordError: true,
-      });
-    }
-  }
-
 }

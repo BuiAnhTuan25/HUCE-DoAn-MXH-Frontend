@@ -50,7 +50,7 @@ import { NewsFeedComponent } from './news-feed/news-feed.component';
     ChatContentComponent,
     HomeComponent,
     CreatePostComponent,
-    NewsFeedComponent
+    NewsFeedComponent,
   ],
   imports: [
     BrowserModule,
