@@ -14,39 +14,82 @@
   </head>
   <body class="overflow-y">
     <nz-affix [nzOffsetTop]="0">
-    <div id="nav">
-      <div id="nav1">
-        <div>
-          <img
-            src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
-            alt="logo"
-          />
+      <div id="nav">
+        <div id="nav1">
+          <div style="padding-top: 5px;">
+            <img
+              src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+              alt="logo"
+            />
+            
+          </div>
+          <input class="input-search" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-input [(ngModel)]="searchContent" type="text" (keyup.enter)="onSearch()" placeholder="Search by phone number" />
+          <div></div>
+
+
+          <div>
+            <i
+              (click)="onClickNewssFeed()"
+              [ngClass]="
+                selectIndex == 0
+                  ? 'fa-solid fa-house icon icon-select'
+                  : 'fa-solid fa-house icon'
+              "
+            ></i>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div>
+            <i
+              (click)="onClickProfile()"
+              [ngClass]="
+                selectIndex == 1
+                  ? 'fa-solid fa-user icon icon-select'
+                  : 'fa-solid fa-user icon'
+              "
+            ></i>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div>
+            <i
+              (click)="onClickChat()"
+              [ngClass]="
+                selectIndex == 2
+                  ? 'fa-brands fa-facebook-messenger icon icon-select'
+                  : 'fa-brands fa-facebook-messenger icon'
+              "
+            ></i>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div style="color: #1890ff;padding-top: 5px;">
+            <a  (click)="logout()">Logout</a>
+          </div>
         </div>
-        <div></div>
-        <div>
-          <i (click)="onClickNewssFeed()" [ngClass]="selectIndex==0?'fa-solid fa-house icon icon-select':'fa-solid fa-house icon'"></i>
-        </div>
-        <div>
-          <i (click)="onClickProfile()" [ngClass]="selectIndex==1?'fa-solid fa-user icon icon-select':'fa-solid fa-user icon'"></i>
-        </div>
-        <div>
-          <i (click)="onClickChat()" [ngClass]="selectIndex==2?'fa-brands fa-facebook-messenger icon icon-select': 'fa-brands fa-facebook-messenger icon'"></i>
-        </div>
-        <div></div>
-        <div>
-            <a style="color: #1890ff" (click)="logout()">Logout</a> 
-        </div>
+      </div>
+    </nz-affix>
+    <div id="main">
+      <div nz-row>
+        <nz-tabset [(nzSelectedIndex)]="selectIndex">
+          <nz-tab><app-news-feed></app-news-feed></nz-tab>
+          <nz-tab><app-profile></app-profile></nz-tab>
+          <nz-tab><app-chat></app-chat></nz-tab>
+          <nz-tab><app-friends></app-friends></nz-tab>
+        </nz-tabset>
       </div>
     </div>
-  </nz-affix>
-  <div id="main">
-    <div nz-row >
-      <nz-tabset [(nzSelectedIndex)]="selectIndex" class="tabset">
-        <nz-tab><app-news-feed></app-news-feed></nz-tab>
-        <nz-tab><app-profile></app-profile></nz-tab>
-        <nz-tab ><app-chat></app-chat></nz-tab>
-      </nz-tabset>
-      </div>
-  </div>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <ul nz-menu *ngIf="searchContent">
+        <li *ngIf="friendSearch" nz-menu-item>1st menu item</li>
+        <li *ngIf="!friendSearch" nz-menu-item nzDisabled>No friends found</li>
+      </ul>
+    </nz-dropdown-menu>
   </body>
-
+</html>

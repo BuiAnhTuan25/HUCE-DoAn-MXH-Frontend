@@ -23,9 +23,9 @@ export class ListChatComponent implements OnInit {
 
   getListFriend(id:number){
     this.friendService.getListFriend(id,0,9999).subscribe((res)=>{
-      if(res.success){
+      if(res.success && res.code == 200){
         this.friends=res.data;
-      } else this.msg.error('Get list friend failed');
+      } else this.msg.error(res.message);
     },err =>{
       this.msg.error(err);
     });

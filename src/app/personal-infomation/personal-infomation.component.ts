@@ -72,9 +72,9 @@ export class PersonalInfomationComponent implements OnInit {
 
   getFriend(meId: number, friendId: number) {
     this.friendService.getFriend(meId, friendId).subscribe((res) => {
-      if (res.success) {
+      if (res.success && res.code == 200) {
         this.friend = res.data;
-      } else this.msg.error('Get friend failed!');
+      } else this.msg.error(res.message);
     },err =>{
       this.msg.error(err);
     });
@@ -82,9 +82,9 @@ export class PersonalInfomationComponent implements OnInit {
 
   getProfile(id: number) {
     this.profileService.getProfile(id).subscribe((res) => {
-      if (res.success) {
+      if (res.success && res.code == 200) {
         this.profile = res.data;
-      } else this.msg.error('Get profile failed!');
+      } else this.msg.error(res.message);
     },err =>{
       this.msg.error(err);
     });
@@ -96,9 +96,9 @@ export class PersonalInfomationComponent implements OnInit {
       friend_id: this.profile.id,
     };
     this.friendService.createFriend(friend).subscribe((res) => {
-      if (res.success) {
+      if (res.success && res.code == 200) {
         this.friend = res.data;
-      } else this.msg.error('Add friend failed!');
+      } else this.msg.error(res.message);
     },err =>{
       this.msg.error(err);
     });
@@ -109,10 +109,10 @@ export class PersonalInfomationComponent implements OnInit {
     this.friendService
       .updateFriend(this.friend, this.friend.id)
       .subscribe((res) => {
-        if (res.success) {
+        if (res.success && res.code == 200) {
           this.friend = res.data;
           this.msg.success('Add friend successfully!');
-        } else this.msg.error('Add friend failed!');
+        } else this.msg.error(res.message);
       },err =>{
         this.msg.error(err);
       });
@@ -120,10 +120,10 @@ export class PersonalInfomationComponent implements OnInit {
 
   deleteFriend() {
     this.friendService.deleteFriend(this.friend.id).subscribe((res) => {
-      if (res.success) {
+      if (res.success && res.code == 200) {
         this.friend = null;
         this.msg.success('Delete friend successfully!');
-      } else this.msg.error('Delete friend failed!');
+      } else this.msg.error(res.message);
     },err =>{
       this.msg.error(err);
     });
@@ -186,15 +186,14 @@ export class PersonalInfomationComponent implements OnInit {
       this.isLoading = true;
 
     this.profileService.updateProfile(this.editForm.value,this.editForm.controls['id'].value,this.file).subscribe((res)=>{
-      if(res.success){
-        debugger
+      if(res.success && res.code == 200){
         this.isLoading=false;
         this.profile=res.data;
         this.isVisibleEdit=false;
         this.msg.success('Update personal information successfully!');
       } else {
         this.isLoading=false;
-        this.msg.error('Update personal information failed!')
+        this.msg.error(res.message)
       }
     },err => {
       this.isLoading=false;
@@ -240,7 +239,7 @@ export class PersonalInfomationComponent implements OnInit {
         new_password:this.passwordForm.controls['newPassword'].value,
       }
       this.auth.changePassword(this.user.id,password).subscribe((res)=>{
-        if(res.success){
+        if(res.success && res.code == 200){
           this.isLoading=false;
           this.tokenStorage.saveUser(res.data);
           this.user=res.data;

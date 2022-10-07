@@ -75,11 +75,11 @@ export class CreateProfileComponent implements OnInit {
       this.profileService
       .createProfile(this.profileForm.value, this.file)
       .subscribe((res: any) => {
-        if (res.success) {
+        if (res.success && res.code == 200) {
             this.msg.success('Create profile successfully');
             this.updateUser(this.user);
             this.router.navigate(['/home']);
-        } else this.msg.error('Create profile failed!');
+        } else this.msg.error(res.message);
       },err =>{
         this.msg.error(err);
       });

@@ -1,0 +1,56 @@
+ <div class="friended">
+ <nz-tabset class="tabset">
+    <nz-tab [nzTitle]="friendedTitle">
+        <div nz-row>
+            <div nz-col nzSpan="12" *ngFor="let friend of friends; index as i">
+              <div [ngClass]="i % 2 != 0 ? 'friend2' : ''" class="friend">
+                <div nz-row>
+                  <div nz-col nzSpan="7">
+                    <img
+                      class="avatar"
+                      src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+                      alt="avatar"
+                    />
+                  </div>
+                  <div class="name-friend" nz-col nzSpan="17">
+                    Bui Anh Tuan
+                    <i class="fa-solid fa-ellipsis icon"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </nz-tab>
+    <nz-tab [nzTitle]="confirmTitle">
+        <div nz-row>
+            <div nz-col nzSpan="12" *ngFor="let friend of friends; index as i">
+              <div [ngClass]="i % 2 != 0 ? 'friend2' : ''" class="friend">
+                <div nz-row>
+                  <div nz-col nzSpan="7">
+                    <img
+                      class="avatar"
+                      src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+                      alt="avatar"
+                    />
+                  </div>
+                  <div class="name-friend" nz-col nzSpan="178">
+                    Bui Anh Tuan
+                    <i class="fa-solid fa-ellipsis icon"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </nz-tab>
+  </nz-tabset>
+  <ng-template #friendedTitle>
+    <div class="title">Friends</div>
+  </ng-template>
+  <ng-template #confirmTitle>
+    <div class="title">Friends request</div>
+  </ng-template>
+</div>
+  <!-- <ng-template #friends> -->
+    
+  <!-- </ng-template> -->
+

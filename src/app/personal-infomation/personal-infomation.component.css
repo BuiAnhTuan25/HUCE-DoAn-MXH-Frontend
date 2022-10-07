@@ -47,12 +47,20 @@
     margin-right: 10px;
 }
 
-:host ::ng-deep .avatar-uploader > .ant-upload {
+/* :host ::ng-deep .avatar-uploader > .ant-upload {
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    background-color: #7e7e7e;
-  }
+    width: 200px;
+    height: 200px;
+  } */
+
+   ant-upload ant-upload-select-picture-card>ant-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    width: 120%;
+}
 
   .avatar-edit{
     width: 100px;
@@ -66,3 +74,4 @@
     background-color: rgba(25, 25, 25, 1);
     color:#ffffff;
   }
+
