@@ -115,7 +115,7 @@ export class LoginComponent implements OnInit {
       this.auth
         .sendEmailForgotPassword(this.modalForm.controls['mail'].value)
         .subscribe((res: any) => {
-          if (res.success && res.data) {
+          if (res.success && res.code == 200) {
             this.isLoadingSend = false;
             this.msg.success(
               'Send email forgot password successfully. Please access your email to check password!'

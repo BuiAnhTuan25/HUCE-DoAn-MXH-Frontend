@@ -24,7 +24,7 @@ import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { AuthInterceptor } from './_helpers/auth.interceptor';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { PersonalInfomationComponent } from './personal-infomation/personal-infomation.component';
-import { FriendsComponent } from './friends/friends.component';
+import { ListFriendsComponent } from './list-friends/list-friends.component';
 import { PostsComponent } from './posts/posts.component';
 import { ListChatComponent } from './list-chat/list-chat.component';
 import { ListUserGroupComponent } from './list-user-group/list-user-group.component';
@@ -32,6 +32,7 @@ import { ChatContentComponent } from './chat-content/chat-content.component';
 import { HomeComponent } from './home/home.component';
 import { CreatePostComponent } from './create-post/create-post.component';
 import { NewsFeedComponent } from './news-feed/news-feed.component';
+import { FriendsComponent } from './friends/friends.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ import { NewsFeedComponent } from './news-feed/news-feed.component';
     ChatComponent,
     PageNotFoundComponent,
     PersonalInfomationComponent,
-    FriendsComponent,
+    ListFriendsComponent,
     PostsComponent,
     ListChatComponent,
     ListUserGroupComponent,
@@ -51,6 +52,7 @@ import { NewsFeedComponent } from './news-feed/news-feed.component';
     HomeComponent,
     CreatePostComponent,
     NewsFeedComponent,
+    FriendsComponent,
   ],
   imports: [
     BrowserModule,

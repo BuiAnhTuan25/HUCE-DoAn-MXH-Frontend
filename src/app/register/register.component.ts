@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
     if (this.validateForm.valid) {
       this.isLoading = true;
       this.auth.register(this.validateForm.value).subscribe((res: any) => {
-        if (res.success) {
+        if (res.success && res.code == 200) {
           this.isLoading = false;
           this.msg.success('Register successfully,please confirm in your email!');
           this.router.navigate(['/login']);
@@ -158,7 +158,7 @@ handleOk() {
     this.auth
       .sendEmailForgotPassword(this.modalForm.controls['email'].value)
       .subscribe((res: any) => {
-        if (res.success) {
+        if (res.success && res.code == 200) {
           this.isLoadingSend = false;
           this.msg.success(
             'Send email forgot password successfully. Please access your email to check password!'

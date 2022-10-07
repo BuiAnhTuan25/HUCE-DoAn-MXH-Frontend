@@ -28,7 +28,6 @@ export class ChatComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
-    this.websocket._connect(this.user.id);
     this.dataService.receiveProfile.subscribe((profile)=>(this.profile=profile));
   }
 
@@ -40,9 +39,9 @@ export class ChatComponent implements OnInit,OnDestroy {
     this.messageService
       .getListMessagesFriend(sender, receiver, 0, 999)
       .subscribe((res) => {
-        if (res.success) {
+        if (res.success && res.code == 200) {
           this.listMessages = res.data;
-        } else this.msg.error('Get list message failed!');
+        } else this.msg.error(res.message);
       },err =>{
         this.msg.error(err);
       });

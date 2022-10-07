@@ -1,0 +1,5 @@
+export enum PRIVACY{
+    PUBLIC='PUBLIC',
+    FRIEND='FRIEND',
+    PRIVATE='PRIVATE',
+ }

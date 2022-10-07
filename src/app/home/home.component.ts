@@ -16,6 +16,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectIndex: number = 0;
   profile: any = {};
   user: any;
+  friendSearch: any ;
+  searchContent:string='';
   constructor(
     private router: Router,
     private profileService: ProfileService,
@@ -39,10 +41,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   getProfile(id: number) {
     this.profileService.getProfile(id).subscribe(
       (res) => {
-        if (res.success) {
+        if (res.success && res.code == 200) {
           this.profile = res.data;
           this.dataService.sendProfile(this.profile);
-        } else this.msg.error('Get profile failed!');
+        } else this.msg.error(res.message);
       },
       (err) => {
         this.msg.error(err);
@@ -61,9 +63,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   onClickNewssFeed() {
     this.selectIndex = 0;
   }
+  onClickSearch(){
+    this.selectIndex = 3;
+  }
 
   logout() {
     this.authService.doLogout();
     this.websocket._disconnect();
   }
+
+  
+  onSearch(){
+    
+  }
+
 }
