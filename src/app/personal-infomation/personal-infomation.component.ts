@@ -17,10 +17,10 @@ import { UserService } from '../_service/user-service/user.service';
   styleUrls: ['./personal-infomation.component.css'],
 })
 export class PersonalInfomationComponent implements OnInit {
-  profile: any={};
+  @Input() profile: any={};
+  @Input() friend: any;
   isPublic = true;
   user: any;
-  friend: any;
   isVisibleEdit:boolean=false;
   editForm!:FormGroup;
   passwordForm!:FormGroup;
@@ -35,7 +35,6 @@ export class PersonalInfomationComponent implements OnInit {
     private msg: NzMessageService,
     private profileService: ProfileService,
     private fb: FormBuilder,
-    private userService: UserService,
     private tokenStorage: TokenStorageService,
     private auth:AuthenticationService,
     private dataService: DataService
@@ -60,25 +59,9 @@ export class PersonalInfomationComponent implements OnInit {
     confirmPassword: ['', [Validators.required, NoSpace]],
 })
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
-    this.dataService.receiveProfile.subscribe(
-      (profile) => (this.profile = profile)
-    );
-    
-    // this.getProfile(this.profileId);
-    // if (this.user.id != this.profileId) {
-    //   this.getFriend(this.user.id, this.profileId);
-    // }
   }
 
-  getFriend(meId: number, friendId: number) {
-    this.friendService.getFriend(meId, friendId).subscribe((res) => {
-      if (res.success && res.code == 200) {
-        this.friend = res.data;
-      } else this.msg.error(res.message);
-    },err =>{
-      this.msg.error(err);
-    });
-  }
+
 
   getProfile(id: number) {
     this.profileService.getProfile(id).subscribe((res) => {
@@ -267,5 +250,16 @@ export class PersonalInfomationComponent implements OnInit {
       });
       this.confirmPassword = false;
     } else this.confirmPassword = true;
+ 
+  }
+
+  checkPhoneNumber(){
+    this.profileService.findByPhoneNumber(this.editForm.controls['phone_number'].value).subscribe((res:any)=>{
+      if(res.success && res.code == 200){
+        this.editForm.controls['phone_number'].setErrors({
+          phoneNumberExist:true
+        })
+      }
+    })
   }
 }

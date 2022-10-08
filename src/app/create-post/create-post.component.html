@@ -26,11 +26,11 @@
         <div nz-col nzSpan="18">
           <nz-form-item>
             <nz-form-control>
-                    <textarea [nzAutosize]="{ minRows: 1, maxRows: 1 }" placeholder="Write something" formControlName="content" nz-input></textarea>
+                    <textarea [nzAutosize]="{ minRows: 2, maxRows: 2 }" placeholder="Write something" formControlName="content" nz-input></textarea>
             </nz-form-control>
           </nz-form-item>
           <div nz-row>
-            <nz-form-item class="privacy" nz-col nzSpan="20">
+            <nz-form-item class="privacy" nz-col nzSpan="19">
                 <nz-form-control>
                   <nz-radio-group  formControlName="privacy">
                     <label nz-radio class="privacy" nzValue="PUBLIC">Public</label>
@@ -39,7 +39,7 @@
                   </nz-radio-group>
                 </nz-form-control>
               </nz-form-item>
-              <button [nzLoading]="isLoading" (click)="createPost()" style="border-radius:5px" nz-col nzSpan="4"  nz-button nzType="primary">Post</button>
+              <button [nzLoading]="isLoading" (click)="createPost()" style="border-radius:5px" nz-col nzSpan="5"  nz-button nzType="primary">Post</button>
             </div>
         </div>
       </div>

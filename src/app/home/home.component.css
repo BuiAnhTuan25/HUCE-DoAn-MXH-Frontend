@@ -58,13 +58,20 @@ color: #1890ff;
   color: #1890ff;
 
 }
-:host ::ng-deep .ant-input{
+.input-search{
   border-radius: 20px;
   height: 40px;
   width:200px;
-}
-.input-search{
   background:#5f5f5f;
   border:none;
   color: #ffffff;
+}
+.avatar{
+  width:30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.name-friend{
+  font-weight: bold;
+  margin-left: 10px;
 }

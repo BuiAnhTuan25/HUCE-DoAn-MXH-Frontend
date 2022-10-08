@@ -33,6 +33,7 @@ import { HomeComponent } from './home/home.component';
 import { CreatePostComponent } from './create-post/create-post.component';
 import { NewsFeedComponent } from './news-feed/news-feed.component';
 import { FriendsComponent } from './friends/friends.component';
+import { RegisterVerifyComponent } from './register-verify/register-verify.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { FriendsComponent } from './friends/friends.component';
     CreatePostComponent,
     NewsFeedComponent,
     FriendsComponent,
+    RegisterVerifyComponent,
   ],
   imports: [
     BrowserModule,

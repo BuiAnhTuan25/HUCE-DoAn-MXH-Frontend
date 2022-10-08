@@ -75,20 +75,41 @@
               />
             </nz-form-control>
           </nz-form-item>
-          <nz-form-item class="username1">
-            <nz-form-control>
+          <nz-form-item class="inputbio1">
+            <nz-form-control [nzErrorTip]="phoneNumberError">
               <input
-              class="username"
+              class="phone-input"
                 type="text"
                 nz-input
+                (blur)="checkPhoneNumber()"
                 formControlName="phone_number"
                 placeholder="Phone number"
               />
             </nz-form-control>
           </nz-form-item>
+          <ng-template #phoneNumberError let-control>
+            <div
+              *ngIf="
+                profileForm.controls['phone_number'].invalid &&
+                (profileForm.controls['phone_number'].dirty ||
+                  profileForm.controls['phone_number'].touched)
+              "
+            >
+              <span *ngIf="profileForm.get('phone_number')?.hasError('required')"
+                >Please input password!</span
+              >
+              <span *ngIf="profileForm.get('phone_number')?.hasError('pattern')"
+                >Phone number invalidate!</span
+              >
+              <span
+                *ngIf="profileForm.get('phone_number')?.hasError('phoneNumberExist')"
+                >Phone number already exists!</span
+              >
+            </div>
+          </ng-template>
           <div nz-row>
             <nz-form-item class="username1" nz-col nzSpan="12">
-              <nz-form-control>
+              <nz-form-control nzErrorTip="Please input bỉthday!">
                 <input
                 class="username"
                   nz-input
@@ -99,7 +120,7 @@
               </nz-form-control>
             </nz-form-item>
             <nz-form-item class="gender1" nz-col nzSpan="12">
-              <nz-form-control>
+              <nz-form-control nzErrorTip="Please input gender!">
                 <nz-select nzPlaceHolder="Gender" formControlName="gender" class="gender">
                   <nz-option nzValue="MALE" nzLabel="MALE"></nz-option>
                   <nz-option nzValue="FEMALE" nzLabel="FEMALE"></nz-option>
@@ -109,7 +130,7 @@
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSpan]="14" >Public</nz-form-label>
-              <nz-form-control [nzSpan]="10" >
+              <nz-form-control [nzSpan]="10">
                 <nz-switch formControlName="is_public"></nz-switch>
               </nz-form-control>
             </nz-form-item>

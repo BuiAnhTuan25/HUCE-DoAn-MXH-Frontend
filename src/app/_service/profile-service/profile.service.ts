@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -14,6 +14,13 @@ export class ProfileService {
 
   getProfile(id: number): Observable<any> {
     return this.http.get(PROFILE_API + '/' + id);
+  }
+
+  findByPhoneNumber(phoneNumber: string):Observable<any>{
+    let param = new HttpParams();
+    param = param.append('phone_number',phoneNumber);
+
+    return this.http.get(PROFILE_API+'/phone-number',{params : param});
   }
 
   createProfile(profile: any, file?: any): Observable<any> {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
@@ -12,6 +12,7 @@ import { PostService } from '../_service/post-service/post.service';
   styleUrls: ['./create-post.component.css'],
 })
 export class CreatePostComponent implements OnInit {
+  @Output() post= new EventEmitter<any>();
   postForm!: FormGroup;
   user: any;
   listPosts: any[] = [];
@@ -58,11 +59,11 @@ export class CreatePostComponent implements OnInit {
         (res) => {
           if (res.success && res.code == 200) {
             this.isLoading = false;
-            this.listPosts = [res.data, ...this.listPosts];
             this.msg.success('Create post successfully!');
             this.postForm.reset();
             this.pictureUrl='';
             this.postForm.controls['privacy'].setValue(PRIVACY.PUBLIC);
+            this.post.emit(res.data);
           } else {
             this.isLoading = false;
             this.msg.error(res.message);

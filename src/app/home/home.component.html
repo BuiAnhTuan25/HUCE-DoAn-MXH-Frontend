@@ -23,7 +23,7 @@
             />
             
           </div>
-          <input class="input-search" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-input [(ngModel)]="searchContent" type="text" (keyup.enter)="onSearch()" placeholder="Search by phone number" />
+          <input class="input-search" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-input [(ngModel)]="searchContent" type="text" (keyup)="onSearch()" placeholder="Search by phone number" />
           <div></div>
 
 
@@ -87,8 +87,16 @@
     </div>
     <nz-dropdown-menu #menu="nzDropdownMenu">
       <ul nz-menu *ngIf="searchContent">
-        <li *ngIf="friendSearch" nz-menu-item>1st menu item</li>
-        <li *ngIf="!friendSearch" nz-menu-item nzDisabled>No friends found</li>
+        <li *ngIf="profileSearch" nz-menu-item (click)="onClickFriend()">
+          <img
+            class="avatar"
+            [src]="profileSearch.avatar_url"
+            alt="avatar"
+            />
+            <div class="name-friend">{{profileSearch.name}}</div>
+           
+        </li>
+        <li *ngIf="!profileSearch" nz-menu-item nzDisabled>No friends found</li>
       </ul>
     </nz-dropdown-menu>
   </body>

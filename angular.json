@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["sockjs-client","stompjs"],
             "outputPath": "dist/huce-doan-mxh",
             "index": "src/index.html",
             "main": "src/main.ts",
