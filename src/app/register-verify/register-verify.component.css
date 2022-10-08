@@ -1,0 +1,91 @@
+#nav1 {
+    padding-top: 10px;
+    padding-left: 64px;
+    padding-right: 64px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  #nav1 img {
+    height: 34px;
+    width: 32px;
+    object-fit: cover;
+  }
+  #nav {
+    background-color: #1c1e21;
+    color:#606770;
+    height: 60px;
+    width: 100%;
+    position: fixed;
+  }
+    #main {
+      font-family: inherit;
+      line-height: inherit;
+      display: block;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(25, 25, 25, 1);
+      /* padding-top: 23px; */
+      height: 100%;
+      width: 100%;
+      color: #ffffff;
+      position: fixed;
+      /* padding-bottom: 80px; */
+    }
+    .overflow-y{
+        position: relative;
+        height: 100%; 
+        overflow: hidden auto;
+    }
+    .overflow-y::-webkit-scrollbar { 
+        width: 0 !important;
+        display: none; 
+    }
+    .center{
+        text-align: center;
+      }
+    
+      .mt-20{
+        margin-top: 200px;
+      }
+    
+      .title{
+        font-size: 24px;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+    #button1 {
+        transition: 0.25s ease-in-out;
+        min-width: 96px;
+        height: 40px;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        background: linear-gradient(112.44deg, #444444 2.09%, #050505 75.22%);
+        background-size: 165%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 17px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border-radius: 4px;
+        width: 30%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 24px;
+        border: solid 1px #7e7e7e;
+      }
+      #button1:hover {
+        background: linear-gradient(0.351turn, #050505 23.71%, #444444 78.8%);
+        background-size: 165%;
+        animation-name: bg-anim;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-fill-mode: forwards;
+      }
+      .login-form-button {
+        width: 20%;
+      }
+      .login-form-margin {
+        margin-bottom: 16px;
+      }

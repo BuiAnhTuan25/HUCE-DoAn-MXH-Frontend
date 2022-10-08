@@ -355,4 +355,41 @@ body {
     width: 100px;
     height: 100px;
   }
+  .phone-input{
+    color:#ffffff;
+      padding-right: 32px;
+      /* padding-left: 16px; */
+      background-color: #5f5f5f;
+      border: 1px solid transparent;
+      height: 40px;
+      border-radius: 0;
+      font-weight: 400;
+      font-size: 14px;
+      font-family: Inter,sans-serif;
+      padding: 16px;
+      width: 100%;
+      /* line-height: inherit;
+      color: inherit; */
+}
+.phone-input:focus{
+  color: #ffffff;
+  background-color: #5f5f5f;
+    border: 0px solid transparent;
+    height: 40px;
+    border-radius: 0;
+    border-color: #000000;
+    box-shadow: 0 0 0 2px rgba(104, 104, 104, 0.2);
+    border-right-width: 1px;
+    outline: 0;
+}
+.inputbio1{
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  --tw-border-opacity: 1;
+  display: block;
+}
+:host ::ng-deep .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input, .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input:hover {
+  background-color: #5f5f5f;
+}
   

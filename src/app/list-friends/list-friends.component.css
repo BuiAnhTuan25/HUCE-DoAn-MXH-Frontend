@@ -38,4 +38,9 @@
 .title{
     font-size: 14px;
     font-weight: bold;
+    color: #ffffff;
+}
+
+.title-menu{
+    margin-right: 10px;
 }

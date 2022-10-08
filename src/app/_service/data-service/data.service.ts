@@ -7,6 +7,8 @@ import { Subject } from 'rxjs';
 export class DataService {
   private chatWith: Subject<any> = new Subject<any>();
   private profile: Subject<any> = new Subject<any>();
+  private profileFriend: Subject<any> = new Subject<any>();
+
   constructor() { }
 
   public get receiveChatWith() {
@@ -23,5 +25,13 @@ export class DataService {
 
   public sendProfile(profile: any) {
     this.profile.next(profile);
+  }
+
+  public get receiveProfileFriend() {
+    return this.profileFriend;
+  }
+
+  public sendProfileFriend(profileFriend: any) {
+    this.profileFriend.next(profileFriend);
   }
 }

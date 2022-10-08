@@ -7,6 +7,7 @@ import { forkJoin, Observable, Observer } from 'rxjs';
 import { PHONE_NUMBER_REGEX } from '../_helpers/validator';
 import { GENDER } from '../_model/gender';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
+import { FriendService } from '../_service/friend-service/friend.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { UserService } from '../_service/user-service/user.service';
 
@@ -33,6 +34,7 @@ export class CreateProfileComponent implements OnInit {
     private router: Router,
     private msg: NzMessageService,
     private auth:AuthenticationService,
+    private friendService: FriendService,
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +42,7 @@ export class CreateProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       id: [this.user.id],
       name: ['', Validators.required],
-      phone_number: ['',Validators.required,Validators.pattern(PHONE_NUMBER_REGEX)],
+      phone_number: ['',[Validators.required,Validators.pattern(PHONE_NUMBER_REGEX)]],
       birthday: ['', Validators.required],
       gender: [GENDER.MALE, Validators.required],
       avatar_url: [''],
@@ -72,15 +74,21 @@ export class CreateProfileComponent implements OnInit {
     this.checkFile();
     
     if(this.validateFile && this.profileForm.valid){
+      this.isLoading=true;
       this.profileService
       .createProfile(this.profileForm.value, this.file)
       .subscribe((res: any) => {
         if (res.success && res.code == 200) {
+            this.isLoading=false;
             this.msg.success('Create profile successfully');
             this.updateUser(this.user);
             this.router.navigate(['/home']);
-        } else this.msg.error(res.message);
+        } else {
+          this.isLoading=false;
+          this.msg.error(res.message);
+        }
       },err =>{
+        this.isLoading=false;
         this.msg.error(err);
       });
     }
@@ -141,5 +149,15 @@ export class CreateProfileComponent implements OnInit {
         this.loading = false;
         break;
     }
+  }
+
+  checkPhoneNumber(){
+    this.profileService.findByPhoneNumber(this.profileForm.controls['phone_number'].value).subscribe((res:any)=>{
+      if(res.success && res.code == 200){
+        this.profileForm.controls['phone_number'].setErrors({
+          phoneNumberExist:true
+        })
+      }
+    })
   }
 }

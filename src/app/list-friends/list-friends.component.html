@@ -2,19 +2,19 @@
  <nz-tabset class="tabset">
     <nz-tab [nzTitle]="friendedTitle">
         <div nz-row>
-            <div nz-col nzSpan="12" *ngFor="let friend of friends; index as i">
-              <div [ngClass]="i % 2 != 0 ? 'friend2' : ''" class="friend">
+            <div nz-col nzSpan="12" *ngFor="let friend of listFriended; index as i">
+              <div *ngIf="friend.friend_status == 'FRIENDED'" [ngClass]="i % 2 != 0 ? 'friend2' : ''" class="friend">
                 <div nz-row>
                   <div nz-col nzSpan="7">
                     <img
                       class="avatar"
-                      src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+                      [src]="friend.avatar_url"
                       alt="avatar"
                     />
                   </div>
                   <div class="name-friend" nz-col nzSpan="17">
-                    Bui Anh Tuan
-                    <i class="fa-solid fa-ellipsis icon"></i>
+                    {{friend.name}}
+                    <i (nzVisibleChange)="onOpenContextMenu(friend)" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" class="fa-solid fa-ellipsis icon"></i>
                   </div>
                 </div>
               </div>
@@ -23,19 +23,19 @@
     </nz-tab>
     <nz-tab [nzTitle]="confirmTitle">
         <div nz-row>
-            <div nz-col nzSpan="12" *ngFor="let friend of friends; index as i">
-              <div [ngClass]="i % 2 != 0 ? 'friend2' : ''" class="friend">
+            <div nz-col nzSpan="12" *ngFor="let friend of listFriendConfirm; index as i">
+              <div *ngIf="friend.friend_status == 'CONFIRM'" [ngClass]="i % 2 != 0 ? 'friend2' : ''" class="friend">
                 <div nz-row>
                   <div nz-col nzSpan="7">
                     <img
                       class="avatar"
-                      src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+                      [src]="friend.avatar_url"
                       alt="avatar"
                     />
                   </div>
-                  <div class="name-friend" nz-col nzSpan="178">
-                    Bui Anh Tuan
-                    <i class="fa-solid fa-ellipsis icon"></i>
+                  <div class="name-friend" nz-col nzSpan="17">
+                    {{friend.name}}
+                    <i (nzVisibleChange)="onOpenContextMenu(friend)" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu"  class="fa-solid fa-ellipsis icon"></i>
                   </div>
                 </div>
               </div>
@@ -47,10 +47,16 @@
     <div class="title">Friends</div>
   </ng-template>
   <ng-template #confirmTitle>
-    <div class="title">Friends request</div>
+    <nz-badge [nzCount]="listFriendConfirm.length">
+    <div class="title" >Friends request</div>
+  </nz-badge>
   </ng-template>
 </div>
-  <!-- <ng-template #friends> -->
-    
-  <!-- </ng-template> -->
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu *ngIf="selectFriend">
+    <li nz-menu-item class="title-menu" *ngIf="selectFriend.friend_status == 'CONFIRM'" (click)="confirmFriend()"><i class="fa-solid fa-check icon"></i>Accept</li>
+    <li nz-menu-item class="title-menu" (click)="deleteFriend()"><i class="fa-solid fa-trash-can icon"></i>Delete</li>
+  </ul>
+</nz-dropdown-menu>
 

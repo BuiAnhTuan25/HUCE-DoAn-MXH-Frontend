@@ -1,5 +1,5 @@
 <div style="padding-bottom:30px">
-  <app-create-post></app-create-post>
+  <app-create-post *ngIf="profile.id == user.id" (post)="afterCreatePost($event)"></app-create-post>
   <div *ngFor="let post of listPosts">
     <div class="post">
       <div nz-row>
@@ -13,7 +13,7 @@
         <div nz-col nzSpan="20">
           <div nz-row class="name">
             <div nz-col nzSpan="22">{{post.name}}</div>
-            <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-col nzSpan="2" class="icon">
+            <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-col nzSpan="1" class="icon">
               <i class="fa-solid fa-ellipsis"></i>
             </div>
             

@@ -24,14 +24,11 @@
     color:#ffffff;
   }
  
-  :host ::ng-deep .ant-input{
-    border-radius: 20px;
-    width:100%;
-  }
 textarea{
     color:#ffffff;
     background-color: #5f5f5f;
     border: none;
+    border-radius: 15px;
 }
 .privacy{
   color: #ffffff;

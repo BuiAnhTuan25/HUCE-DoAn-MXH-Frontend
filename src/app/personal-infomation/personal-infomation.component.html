@@ -110,6 +110,7 @@
           class="username"
             type="text"
             nz-input
+            (blur)="checkPhoneNumber()"
             formControlName="phone_number"
             placeholder="Phone number"
           />
@@ -129,6 +130,10 @@
           <span *ngIf="editForm.get('phone_number')?.hasError('pattern')"
             >Phone number invalidate!</span
           >
+          <span
+          *ngIf="editForm.get('phone_number')?.hasError('phoneNumberExist')"
+          >Phone number already exists!</span
+        >
         </div>
       </ng-template>
       <div nz-row>

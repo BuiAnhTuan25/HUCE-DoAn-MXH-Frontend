@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="overflow-y">
+    <nz-affix [nzOffsetTop]="0">
+    <div id="nav">
+      <div id="nav1">
+        <div>
+          <img
+            src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+            alt="logo"
+          />
+        </div>
+        <div>
+        </div>
+      </div>
+    </div>
+  </nz-affix>
+    <div id="main">
+        <div class="center mt-20" *ngIf="success">
+            <div class="title">
+                Create account success
+            </div>
+            
+            <div class="center">
+                <button
+                nz-button
+                id="button1"
+                class="login-form-button login-form-margin"
+                [nzType]="'primary'"
+                (click)="login()"
+              >
+                Log in
+              </button>
+            </div>
+        </div>
+            <div class="center mt-20" *ngIf="success==false">
+                <div class="title">
+                    Create account failed
+                </div>
+                
+                <div class="center">
+                    <button
+                    nz-button
+                    id="button1"
+                    class="login-form-button login-form-margin"
+                    [nzType]="'primary'"
+                    (click)="register()"
+                  >
+                    Register
+                  </button>
+                </div>
+            </div>
+    </div>
+  </body>
+</html>
+
