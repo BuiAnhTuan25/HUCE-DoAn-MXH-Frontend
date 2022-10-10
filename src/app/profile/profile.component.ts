@@ -4,6 +4,7 @@ import { ListChatComponent } from '../list-chat/list-chat.component';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
 import { DataService } from '../_service/data-service/data.service';
 import { PostService } from '../_service/post-service/post.service';
+import { ProfileService } from '../_service/profile-service/profile.service';
 import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
 @Component({
@@ -47,4 +48,5 @@ export class ProfileComponent implements OnInit {
       this.msg.error(err.message);
     })
   }
+
 }

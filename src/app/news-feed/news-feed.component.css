@@ -1,0 +1,32 @@
+#main {
+    font-family: inherit;
+    line-height: inherit;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(25, 25, 25, 1);
+    /* padding-top: 23px; */
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    position: fixed;
+    margin-top: 20px;
+    /* padding-bottom: 80px; */
+  }
+  
+    .overflow-y{
+      position: relative;
+      height: 90%; 
+      overflow: hidden auto;
+  }
+  .overflow-y::-webkit-scrollbar { 
+      width: 0 !important;
+      display: none; 
+  }
+
+  .post{
+    width:40%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  

@@ -12,10 +12,12 @@
                       alt="avatar"
                     />
                   </div>
-                  <div class="name-friend" nz-col nzSpan="17">
-                    {{friend.name}}
-                    <i (nzVisibleChange)="onOpenContextMenu(friend)" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" class="fa-solid fa-ellipsis icon"></i>
+                  <div nz-col nzSpan="17">
+                    <div nz-row>
+                    <div class="name-friend" nz-col nzSpan="20" (click)="onClickFriend(friend)">{{friend.name}}</div>
+                    <i nz-col nzSpan="3" (nzVisibleChange)="onOpenContextMenu(friend)" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" class="fa-solid fa-ellipsis icon"></i>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
@@ -33,10 +35,12 @@
                       alt="avatar"
                     />
                   </div>
-                  <div class="name-friend" nz-col nzSpan="17">
-                    {{friend.name}}
-                    <i (nzVisibleChange)="onOpenContextMenu(friend)" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu"  class="fa-solid fa-ellipsis icon"></i>
+                  <div nz-col nzSpan="17">
+                    <div nz-row>
+                    <div class="name-friend" nz-col nzSpan="20" (click)="onClickFriend(friend)">{{friend.name}}</div>
+                    <i nz-col nzSpan="3" (nzVisibleChange)="onOpenContextMenu(friend)" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu"  class="fa-solid fa-ellipsis icon"></i>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
@@ -55,8 +59,8 @@
 
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu *ngIf="selectFriend">
-    <li nz-menu-item class="title-menu" *ngIf="selectFriend.friend_status == 'CONFIRM'" (click)="confirmFriend()"><i class="fa-solid fa-check icon"></i>Accept</li>
-    <li nz-menu-item class="title-menu" (click)="deleteFriend()"><i class="fa-solid fa-trash-can icon"></i>Delete</li>
+    <li nz-menu-item class="title-menu" *ngIf="selectFriend.friend_status == 'CONFIRM'" (click)="confirmFriend()"><i class="fa-solid fa-check icon-contex"></i>Accept</li>
+    <li nz-menu-item class="title-menu" (click)="deleteFriend()"><i class="fa-solid fa-trash-can icon-contex"></i>Delete</li>
   </ul>
 </nz-dropdown-menu>
 

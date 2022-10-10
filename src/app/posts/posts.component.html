@@ -13,7 +13,7 @@
         <div nz-col nzSpan="20">
           <div nz-row class="name">
             <div nz-col nzSpan="22">{{post.name}}</div>
-            <div nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-col nzSpan="1" class="icon">
+            <div *ngIf="post.author_id == user.id" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" (nzVisibleChange)="onOpenContextMenu(post)" nz-col nzSpan="1" class="icon">
               <i class="fa-solid fa-ellipsis"></i>
             </div>
             
@@ -45,9 +45,61 @@
   </div>
   <nz-dropdown-menu #menu="nzDropdownMenu">
     <ul nz-menu>
-      <li nz-menu-item><i class="fa-solid fa-pen-to-square icon-drop"></i>Edit post</li>
+      <li nz-menu-item (click)="openModalEdit()"><i class="fa-solid fa-pen-to-square icon-drop"></i>Edit post</li>
       <li nz-menu-divider></li>
-      <li nz-menu-item><i class="fa-solid fa-trash-can icon-drop"></i> Delete</li>
-
+      <li nz-menu-item (click)="deletePost()"><i class="fa-solid fa-trash-can icon-drop"></i> Delete</li>
     </ul>
   </nz-dropdown-menu>
+  <nz-modal [(nzVisible)]="isVisible" [nzClosable]="false" [nzFooter]="footer" [nzTitle]="header" nzTitle="The first Modal" (nzOnCancel)="closeModalEdit()">
+    <ng-container *nzModalContent>
+      <form nz-form [formGroup]="postForm">
+        <div nz-row>
+          <nz-upload
+            nz-col
+            nzSpan="6"
+            class="avatar-uploader"
+            nzAction="http://localhost:8080/api/v1.0/upload"
+            nzName="avatar"
+            nzListType="picture-card"
+            [nzShowUploadList]="false"
+            [nzBeforeUpload]="beforeUpload"
+            (nzChange)="handleChange($event)"
+          >
+            <ng-container *ngIf="!pictureUrl">
+              <i
+                class="upload-icon text"
+                nz-icon
+                [nzType]="loading ? 'loading' : 'plus'"
+              ></i>
+              <div class="ant-upload-text text">Upload</div>
+            </ng-container>
+            <img *ngIf="pictureUrl" [src]="pictureUrl" class="avatar" />
+          </nz-upload>
+          <div nz-col nzSpan="18">
+            <nz-form-item>
+              <nz-form-control>
+                      <textarea [nzAutosize]="{ minRows: 2, maxRows: 2 }" placeholder="Write something" formControlName="content" nz-input></textarea>
+              </nz-form-control>
+            </nz-form-item>
+              <nz-form-item class="privacy" nz-col nzSpan="19">
+                  <nz-form-control>
+                    <nz-radio-group  formControlName="privacy">
+                      <label nz-radio class="privacy" nzValue="PUBLIC">Public</label>
+                      <label nz-radio class="privacy" nzValue="FRIEND">Friend</label>
+                      <label nz-radio class="privacy" nzValue="PRIVATE">Private</label>
+                    </nz-radio-group>
+                  </nz-form-control>
+                </nz-form-item>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </nz-modal>
+  <ng-template #header>
+  <div>Update post
+    <button [nzLoading]="isLoading" (click)="updatePost()" style="float:right" nz-button nzType="primary">SAVE</button>
+  </div>
+  </ng-template>
+  <ng-template #footer>
+
+  </ng-template>

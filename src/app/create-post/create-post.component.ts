@@ -77,40 +77,6 @@ export class CreatePostComponent implements OnInit {
     }
   }
 
-  // updatePost(){
-  //   if(this.postForm.controls['content'].value || this.file){
-  //     this.isLoading=true;
-  //     this.postService.updatePost(this.postForm.value,this.file).subscribe(res=>{
-  //       if(res.success && res.code == 200){
-  //         this.isLoading=false;
-  //         this.listPosts = [res.data,...this.listPosts];
-  //         this.msg.success('Create post successfully!');
-  //       } else {
-  //         this.isLoading=false;
-  //         this.msg.error(res.message);
-  //       }
-  //     },err=>{
-  //       this.isLoading=false;
-  //       this.msg.error(err);
-  //     })
-  //   }
-  // }
-
-  deletePost(id: number) {
-    this.postService.deletePost(id).subscribe(
-      (res: any) => {
-        if (res.success && res.code == 200) {
-          const index = this.listPosts.findIndex((x) => x.id == res.data.id);
-          this.listPosts.slice(index, 1);
-          this.msg.success('Delete post successfully!');
-        } else this.msg.error(res.message);
-      },
-      (err) => {
-        this.msg.error(err);
-      }
-    );
-  }
-
   beforeUpload = (
     file: NzUploadFile,
     _fileList: NzUploadFile[]

@@ -25,15 +25,18 @@
     border-radius: 50%;
 }
 .name-friend{
+    color:#ffffff;
     font-size: 14px;
     font-weight: bold;
-    margin-top: 5%;
+    margin-top: 10%;
+    cursor: pointer;
 }
 .icon{
-    float:right;
-    margin-right: 10%;
-    margin-top: 3%;
+    margin-top: 13%;
     cursor: pointer;
+}
+.icon-contex{
+    margin-right: 10px;
 }
 .title{
     font-size: 14px;

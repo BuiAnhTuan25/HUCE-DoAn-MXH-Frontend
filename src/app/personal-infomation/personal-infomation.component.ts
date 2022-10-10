@@ -19,7 +19,6 @@ import { UserService } from '../_service/user-service/user.service';
 export class PersonalInfomationComponent implements OnInit {
   @Input() profile: any={};
   @Input() friend: any;
-  isPublic = true;
   user: any;
   isVisibleEdit:boolean=false;
   editForm!:FormGroup;

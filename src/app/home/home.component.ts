@@ -40,6 +40,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(model => {
         this.findProfileByPhoneNumber(model);
       });
+
+    this.dataService.receiveProfileFriend.subscribe(profileFriend=>{
+      this.selectIndex = 3;
+    })
   }
 
   ngOnDestroy(): void {

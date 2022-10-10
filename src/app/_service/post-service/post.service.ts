@@ -30,6 +30,22 @@ export class PostService {
     );
   }
 
+  getNewsFeed(
+    id: number,
+    page: number,
+    pageSize: number
+  ): Observable<any> {
+    return this.http.get(
+      POST_API +
+        '/news-feed/' +
+        id +
+        '?page=' +
+        page +
+        '&page-size=' +
+        pageSize
+    );
+  }
+
   createPost(post: any, picture?: any): Observable<any> {
     const formdata = new FormData();
     formdata.append('picture', picture);
