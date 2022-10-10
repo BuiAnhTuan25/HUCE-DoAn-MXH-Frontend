@@ -3,6 +3,7 @@ import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dro
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from '../_service/data-service/data.service';
 import { FriendService } from '../_service/friend-service/friend.service';
+import { ProfileService } from '../_service/profile-service/profile.service';
 
 @Component({
   selector: 'app-list-friends',
@@ -19,6 +20,7 @@ export class ListFriendsComponent implements OnInit {
     private dataService: DataService,
     private friendService: FriendService,
     private msg: NzMessageService,
+    private profileService: ProfileService
   ) {}
 
   ngOnInit(): void {
@@ -83,5 +85,13 @@ export class ListFriendsComponent implements OnInit {
     },err =>{
       this.msg.error(err);
     });
+  }
+
+  onClickFriend(friend:any){
+    this.profileService.getProfile(friend.friend_id).subscribe(res=>{
+      if(res.success && res.code == 200){
+        this.dataService.sendProfileFriend(res.data);
+      } else this.msg.error(res.message);
+    })
   }
 }

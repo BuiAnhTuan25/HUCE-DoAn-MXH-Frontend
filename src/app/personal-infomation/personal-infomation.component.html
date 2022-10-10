@@ -24,10 +24,10 @@
         </button>
       </div>
     </div>
-    <div *ngIf="isPublic" class="about">{{ profile?.birthday }}</div>
-    <div *ngIf="isPublic" class="about">{{ profile?.phone_number }}</div>
-    <div *ngIf="isPublic" class="about">{{ profile?.address }}</div>
-    <div *ngIf="isPublic" class="about">{{ profile?.gender }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.birthday }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.phone_number }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.address }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.gender }}</div>
     <div (click)="openChangePassword()" *ngIf="profile?.id == user.id" class="change-password">Change password</div>
     <div style="margin-top:10px">
       
