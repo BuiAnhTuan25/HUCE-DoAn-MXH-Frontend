@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="overflow-y">
+    <nz-affix [nzOffsetTop]="0">
+      <div id="nav">
+        <div id="nav1">
+          <div style="padding-top: 5px;">
+            <img
+              src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+              alt="logo"
+            />
+            
+          </div>
+          <input class="input-search" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-input [(ngModel)]="searchContent" type="text" (keyup)="onSearch()" placeholder="Search by phone number" />
+          <div></div>
+
+
+          <div>
+            <i
+              (click)="onClickNewssFeed()"
+              [ngClass]="
+                selectIndex == 0
+                  ? 'fa-solid fa-house icon icon-select'
+                  : 'fa-solid fa-house icon'
+              "
+            ></i>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div>
+            <i
+              (click)="onClickProfile()"
+              [ngClass]="
+                selectIndex == 1
+                  ? 'fa-solid fa-user icon icon-select'
+                  : 'fa-solid fa-user icon'
+              "
+            ></i>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div>
+            <i
+              (click)="onClickChat()"
+              [ngClass]="
+                selectIndex == 2
+                  ? 'fa-brands fa-facebook-messenger icon icon-select'
+                  : 'fa-brands fa-facebook-messenger icon'
+              "
+            ></i>
+          </div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div style="color: #1890ff;padding-top: 5px;">
+            <a  (click)="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nz-affix>
+    <div id="main">
+      <div nz-row>
+        <nz-tabset [(nzSelectedIndex)]="selectIndex">
+          <nz-tab><app-news-feed></app-news-feed></nz-tab>
+          <nz-tab><app-profile></app-profile></nz-tab>
+          <nz-tab><app-chat></app-chat></nz-tab>
+          <nz-tab><app-friends></app-friends></nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <ul nz-menu *ngIf="searchContent">
+        <li *ngIf="profileSearch" nz-menu-item (click)="onClickFriend()">
+          <img
+            class="avatar"
+            [src]="profileSearch.avatar_url"
+            alt="avatar"
+            />
+            <div class="name-friend">{{profileSearch.name}}</div>
+           
+        </li>
+        <li *ngIf="!profileSearch" nz-menu-item nzDisabled>No friends found</li>
+      </ul>
+    </nz-dropdown-menu>
+  </body>
+</html>

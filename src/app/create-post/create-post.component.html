@@ -1,0 +1,48 @@
+<div class="new-post">
+  <div class="create">
+    <form nz-form [formGroup]="postForm">
+      <div nz-row>
+        <nz-upload
+          nz-col
+          nzSpan="6"
+          class="avatar-uploader"
+          nzAction="http://localhost:8080/api/v1.0/upload"
+          nzName="avatar"
+          nzListType="picture-card"
+          [nzShowUploadList]="false"
+          [nzBeforeUpload]="beforeUpload"
+          (nzChange)="handleChange($event)"
+        >
+          <ng-container *ngIf="!pictureUrl">
+            <i
+              class="upload-icon text"
+              nz-icon
+              [nzType]="loading ? 'loading' : 'plus'"
+            ></i>
+            <div class="ant-upload-text text">Upload</div>
+          </ng-container>
+          <img *ngIf="pictureUrl" [src]="pictureUrl" class="avatar" />
+        </nz-upload>
+        <div nz-col nzSpan="18">
+          <nz-form-item>
+            <nz-form-control>
+                    <textarea [nzAutosize]="{ minRows: 2, maxRows: 2 }" placeholder="Write something" formControlName="content" nz-input></textarea>
+            </nz-form-control>
+          </nz-form-item>
+          <div nz-row>
+            <nz-form-item class="privacy" nz-col nzSpan="19">
+                <nz-form-control>
+                  <nz-radio-group  formControlName="privacy">
+                    <label nz-radio class="privacy" nzValue="PUBLIC">Public</label>
+                    <label nz-radio class="privacy" nzValue="FRIEND">Friend</label>
+                    <label nz-radio class="privacy" nzValue="PRIVATE">Private</label>
+                  </nz-radio-group>
+                </nz-form-control>
+              </nz-form-item>
+              <button [nzLoading]="isLoading" (click)="createPost()" style="border-radius:5px" nz-col nzSpan="5"  nz-button nzType="primary">Post</button>
+            </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

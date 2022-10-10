@@ -1,0 +1,15 @@
+<div id="main">
+  <div class="overflow-y">
+  <div nz-row class="infomation">
+    <app-personal-infomation [profile]="profileFriend" [friend]="friend"></app-personal-infomation>
+  </div>
+  <div nz-row class="tabs">
+    <nz-tabset class="tabset">
+      <nz-tab [nzTitle]="postTitle"><app-posts [profile]="profileFriend" [listPosts]="listPosts"></app-posts></nz-tab>
+    </nz-tabset>
+    <ng-template #postTitle>
+      <div class="title">Posts</div>
+    </ng-template>
+  </div>
+</div>
+</div>

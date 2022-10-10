@@ -1,1 +1,25 @@
-<p>profile works!</p>
+
+    <div id="main">
+      <div class="overflow-y">
+      <div nz-row class="infomation">
+        <app-personal-infomation [profile]="profile"></app-personal-infomation>
+      </div>
+      <div nz-row class="tabs">
+        <nz-tabset class="tabset">
+          <nz-tab [nzTitle]="postTitle"><app-posts [profile]="profile" [listPosts]="listPosts"></app-posts></nz-tab>
+          <nz-tab [nzTitle]="friendsTitle"><app-list-friends #appListFriend></app-list-friends></nz-tab>
+        </nz-tabset>
+        <ng-template #postTitle>
+          <div class="title">Posts</div>
+        </ng-template>
+        <ng-template #friendsTitle>
+          <nz-badge [nzCount]="appListFriend.listFriendConfirm.length">
+          <div class="title">Friends</div>
+        </nz-badge>
+        </ng-template>
+      </div>
+    </div>
+    </div>
+
+
+

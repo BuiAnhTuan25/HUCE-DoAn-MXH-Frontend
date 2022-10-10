@@ -1,0 +1,275 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+    <img
+      class="avatar"
+      [src]="profile?.avatar_url"
+      alt="avatar"
+    />
+  </div>
+  <div nz-col nzSpan="2"></div>
+  <div class="infomation" nz-col nzSpan="13">
+    <div nz-row>
+      <div nz-col nzSpan="10" id="name">{{ profile?.name }}</div>
+      <div nz-col nzSpan="4"></div>
+      <div nz-col nzSpan="10">
+        <button
+          *ngIf="profile?.id == user.id"
+          class="button-change"
+          nz-button
+          nzType="default"
+          [nzGhost]="true"
+          (click)="openModalEdit()"
+        >
+        <i class="fa-regular fa-pen-to-square icon"></i> Edit
+        </button>
+      </div>
+    </div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.birthday }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.phone_number }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.address }}</div>
+    <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.gender }}</div>
+    <div (click)="openChangePassword()" *ngIf="profile?.id == user.id" class="change-password">Change password</div>
+    <div style="margin-top:10px">
+      
+      <button (click)="createFriend()" *ngIf="profile?.id != user.id && !friend" nz-button class="button-add" nzType="default">
+        <i class="fa-solid fa-user-plus icon"></i>Add friend
+      </button>
+      <button nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" *ngIf="profile?.id != user.id && friend?.friend_status == 'FRIENDED'" nz-button class="button-add" nzType="default">
+        <i class="fa-solid fa-user-group icon"></i>Friend
+      </button>
+      <button nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" *ngIf="profile?.id != user.id && friend?.friend_status == 'CONFIRM'" nz-button class="button-add" nzType="default">
+        <i class="fa-solid fa-user-plus icon"></i>Confirm
+      </button>
+      <button nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" *ngIf="profile?.id != user.id && friend?.friend_status == 'WAITING'" nz-button class="button-add" nzType="default">
+        <i class="fa-solid fa-user-plus icon"></i>waiting
+      </button>
+      <button *ngIf="profile?.id != user.id" nz-button class="button-add" nzType="primary">
+        <i class="fa-brands fa-facebook-messenger icon"></i>Chat
+      </button>
+    </div>
+  </div>
+</div>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu>
+    <li nz-menu-item (click)="deleteFriend()" *ngIf="friend?.friend_status == 'FRIENDED'"><i class="fa-solid fa-user-xmark icon"></i> Delete friend</li>
+    <li nz-menu-item (click)="confirmFriend()" *ngIf="friend?.friend_status == 'CONFIRM'"><i class="fa-solid fa-user-plus icon"></i> Agree</li>
+    <li nz-menu-item (click)="deleteFriend()" *ngIf="friend?.friend_status == 'WAITING' || friend?.friend_status == 'CONFIRM'"><i class="fa-solid fa-xmark icon"></i> Cancel</li>
+  </ul>
+</nz-dropdown-menu>
+<nz-modal [nzWidth]="420" [(nzVisible)]="isVisibleEdit" [nzClosable]="false" [nzFooter]="footer" [nzTitle]="header" (nzOnCancel)="handleCancelEdit()" (nzOnOk)="onSaveInfomation()">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="editForm">
+      <div style="text-align: center">
+        <nz-upload
+        style="width:150px"
+          class="avatar-uploader"
+          nzAction="http://localhost:8080/api/v1.0/upload"
+          nzName="avatar"
+          nzListType="picture-card"
+          [nzShowUploadList]="false"
+          [nzBeforeUpload]="beforeUpload"
+          (nzChange)="handleChange($event)"
+        >
+          <ng-container *ngIf="!avatarUrl">
+            <i
+              class="upload-icon text"
+              nz-icon
+              [nzType]="loading ? 'loading' : 'plus'"
+            ></i>
+            <div class="ant-upload-text text">Upload</div>
+          </ng-container>
+          <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar-edit" />
+        </nz-upload>
+      </div>
+      <nz-form-item class="username1">
+        <nz-form-control nzErrorTip="Please input fullname!">
+          <input
+            class="username"
+            type="text"
+            nz-input
+            formControlName="name"
+            placeholder="Name"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="username1">
+        <nz-form-control>
+          <input
+          class="username"
+            type="text"
+            nz-input
+            formControlName="address"
+            placeholder="Address"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="username1">
+        <nz-form-control [nzErrorTip]="errorCode">
+          <input
+          class="username"
+            type="text"
+            nz-input
+            (blur)="checkPhoneNumber()"
+            formControlName="phone_number"
+            placeholder="Phone number"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #errorCode let-control>
+        <div
+          *ngIf="
+            editForm.controls['phone_number'].invalid &&
+            (editForm.controls['phone_number'].dirty ||
+            editForm.controls['phone_number'].touched)
+          "
+        >
+          <span *ngIf="editForm.get('phone_number')?.hasError('required')"
+            >Please input phone number!</span
+          >
+          <span *ngIf="editForm.get('phone_number')?.hasError('pattern')"
+            >Phone number invalidate!</span
+          >
+          <span
+          *ngIf="editForm.get('phone_number')?.hasError('phoneNumberExist')"
+          >Phone number already exists!</span
+        >
+        </div>
+      </ng-template>
+      <div nz-row>
+        <nz-form-item class="username1" nz-col nzSpan="12">
+          <nz-form-control>
+            <input
+            class="username"
+              nz-input
+              type="date"
+              formControlName="birthday"
+              placeholder="Birthday"
+            />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="gender1" nz-col nzSpan="12">
+          <nz-form-control>
+            <nz-select nzPlaceHolder="Gender" formControlName="gender" class="gender">
+              <nz-option nzValue="MALE" nzLabel="MALE"></nz-option>
+              <nz-option nzValue="FEMALE" nzLabel="FEMALE"></nz-option>
+              <nz-option nzValue="OTHER" nzLabel="OTHER"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="14" >Public</nz-form-label>
+          <nz-form-control [nzSpan]="10" >
+            <nz-switch formControlName="is_public"></nz-switch>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </form>
+  </ng-container>
+</nz-modal>
+<ng-template #header>
+<div>Change personal information
+  <button [nzLoading]="isLoading" (click)="onSaveInfomation()" style="float:right" nz-button nzType="primary">SAVE</button>
+</div>
+</ng-template>
+<ng-template #footer>
+
+</ng-template>
+
+<nz-modal [nzWidth]="420" [nzClosable]="false" [(nzVisible)]="isVisiblePassword" [nzTitle]="titlePass" [nzFooter]="footer" (nzOnCancel)="closePassword()">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="passwordForm">
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="oldError">
+          <input
+            class="password"
+            type="password"
+            nz-input
+            formControlName="oldPassword"
+            placeholder="Old Password"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #oldError let-control>
+        <div
+          *ngIf="
+            passwordForm.controls['oldPassword'].invalid &&
+            (passwordForm.controls['oldPassword'].dirty ||
+              passwordForm.controls['oldPassword'].touched)
+          "
+        >
+          <span *ngIf="passwordForm.get('oldPassword')?.hasError('required')"
+            >Please input old password!</span
+          >
+          <span *ngIf="passwordForm.get('oldPassword')?.hasError('oldPasswordError')"
+            >Incorrect password!</span
+          >
+        </div>
+      </ng-template>
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="errorPassword">
+          <input
+            class="password"
+            type="password"
+            nz-input
+            formControlName="newPassword"
+            placeholder="New Password"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #errorPassword let-control>
+        <div
+          *ngIf="
+            passwordForm.controls['newPassword'].invalid &&
+            (passwordForm.controls['newPassword'].dirty ||
+              passwordForm.controls['newPassword'].touched)
+          "
+        >
+          <span *ngIf="passwordForm.get('newPassword')?.hasError('required')"
+            >Please input password!</span
+          >
+          <span *ngIf="passwordForm.get('newPassword')?.hasError('whitespace')"
+            >Password must not contain spaces!</span
+          >
+        </div>
+      </ng-template>
+      <nz-form-item>
+        <nz-form-control [nzErrorTip]="errorConfirmPassword">
+          <input
+            class="password"
+            (ngModelChange)="checkConfirmPassword()"
+            type="password"
+            nz-input
+            formControlName="confirmPassword"
+            placeholder="Confirm password"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <ng-template #errorConfirmPassword let-control>
+        <div
+          *ngIf="
+            passwordForm.controls['confirmPassword'].invalid &&
+            (passwordForm.controls['confirmPassword'].dirty ||
+              passwordForm.controls['confirmPassword'].touched)
+          "
+        >
+          <span *ngIf="passwordForm.get('confirmPassword')?.hasError('required')"
+            >Please input password!</span
+          >
+          <span *ngIf="passwordForm.get('confirmPassword')?.hasError('whitespace')"
+            >Password must not contain spaces!</span
+          >
+          <span
+            *ngIf="passwordForm.get('confirmPassword')?.hasError('confirmPasswordExist')"
+            >Password is inconsistent!</span
+          >
+        </div>
+      </ng-template>
+    </form>
+  </ng-container>
+</nz-modal>
+<ng-template #titlePass>
+  <div>Change password
+    <button [nzLoading]="isLoading" (click)="onSavePassword()" style="float:right" nz-button nzType="primary">SAVE</button>
+  </div>
+  </ng-template>

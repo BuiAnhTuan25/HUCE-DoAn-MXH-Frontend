@@ -1,1 +1,15 @@
-<p>chat works!</p>
+<div id="main">
+  <div nz-row>
+    <div nz-col nzSpan="6">
+      <app-list-chat (sendChatWith)="receiverChatWith($event)"></app-list-chat>
+    </div>
+    <div nz-col nzSpan="12">
+      <app-chat-content
+        *ngIf="chatWith"
+        [chatWith]="chatWith"
+        [listMessages]="listMessages"
+      ></app-chat-content>
+    </div>
+    <div nz-col nzSpan="6"><app-list-user-group></app-list-user-group></div>
+  </div>
+</div>

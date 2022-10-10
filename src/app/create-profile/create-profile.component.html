@@ -1,1 +1,153 @@
-<p>create-profile works!</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div id="nav">
+      <div id="nav1">
+        <div>
+          <img
+            src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
+            alt="logo"
+          />
+        </div>
+        <p id="p1">
+          {{user.email}}
+          <a style="color:#007bff" (click)="onClickLogout()">Logout</a>
+        </p>
+      </div>
+    </div>
+    <div id="main">
+      <div id="login1">
+        <form nz-form [formGroup]="profileForm">
+          <div style="text-align: center">
+            <nz-upload
+              class="avatar-uploader"
+              nzAction="http://localhost:8080/api/v1.0/upload"
+              nzName="avatar"
+              nzListType="picture-card"
+              [nzShowUploadList]="false"
+              [nzBeforeUpload]="beforeUpload"
+              (nzChange)="handleChange($event)"
+            >
+              <ng-container *ngIf="!avatarUrl">
+                <i
+                  class="upload-icon text"
+                  nz-icon
+                  [nzType]="loading ? 'loading' : 'plus'"
+                ></i>
+                <div class="ant-upload-text text">Upload</div>
+              </ng-container>
+              <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar" />
+            </nz-upload>
+            <div class="erorr">{{ erorrPictire }}</div>
+          </div>
+          <nz-form-item class="username1">
+            <nz-form-control nzErrorTip="Please input fullname!">
+              <input
+                class="username"
+                type="text"
+                nz-input
+                formControlName="name"
+                placeholder="Name"
+              />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item class="username1">
+            <nz-form-control>
+              <input
+              class="username"
+                type="text"
+                nz-input
+                formControlName="address"
+                placeholder="Address"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class="inputbio1">
+            <nz-form-control [nzErrorTip]="phoneNumberError">
+              <input
+              class="phone-input"
+                type="text"
+                nz-input
+                (blur)="checkPhoneNumber()"
+                formControlName="phone_number"
+                placeholder="Phone number"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <ng-template #phoneNumberError let-control>
+            <div
+              *ngIf="
+                profileForm.controls['phone_number'].invalid &&
+                (profileForm.controls['phone_number'].dirty ||
+                  profileForm.controls['phone_number'].touched)
+              "
+            >
+              <span *ngIf="profileForm.get('phone_number')?.hasError('required')"
+                >Please input password!</span
+              >
+              <span *ngIf="profileForm.get('phone_number')?.hasError('pattern')"
+                >Phone number invalidate!</span
+              >
+              <span
+                *ngIf="profileForm.get('phone_number')?.hasError('phoneNumberExist')"
+                >Phone number already exists!</span
+              >
+            </div>
+          </ng-template>
+          <div nz-row>
+            <nz-form-item class="username1" nz-col nzSpan="12">
+              <nz-form-control nzErrorTip="Please input bỉthday!">
+                <input
+                class="username"
+                  nz-input
+                  type="date"
+                  formControlName="birthday"
+                  placeholder="Birthday"
+                />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="gender1" nz-col nzSpan="12">
+              <nz-form-control nzErrorTip="Please input gender!">
+                <nz-select nzPlaceHolder="Gender" formControlName="gender" class="gender">
+                  <nz-option nzValue="MALE" nzLabel="MALE"></nz-option>
+                  <nz-option nzValue="FEMALE" nzLabel="FEMALE"></nz-option>
+                  <nz-option nzValue="OTHER" nzLabel="OTHER"></nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="14" >Public</nz-form-label>
+              <nz-form-control [nzSpan]="10">
+                <nz-switch formControlName="is_public"></nz-switch>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <button
+            nz-button
+            id="button1"
+            class="login-form-button login-form-margin"
+            [nzType]="'primary'"
+            (click)="createProfile()"
+            [nzLoading]="isLoading"
+          >
+            CREATE PROFILE
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
