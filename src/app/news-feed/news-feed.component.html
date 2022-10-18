@@ -1,7 +1,10 @@
 <div id="main">
   <div class="overflow-y">
     <div class="post">
-      <app-posts [profile]="profile" [listPosts]="listPosts"></app-posts>
+        <app-create-post *ngIf="profile.id == user.id" (post)="afterCreatePost($event)"></app-create-post>
+        <div *ngFor="let post of listPosts">
+          <app-posts [profile]="profile" [post]="post" (postUpdate)="onUpdatePost($event)" (postDelete)="onDeletePost($event)"></app-posts>
+        </div>
     </div>
   </div>
 </div>

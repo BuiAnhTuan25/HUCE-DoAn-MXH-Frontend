@@ -1,13 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  NzContextMenuService,
+  NzDropdownMenuComponent,
+} from 'ng-zorro-antd/dropdown';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
 import { PRIVACY } from '../_model/privacy';
+import { CommentService } from '../_service/comment-service/comment.service';
+import { DataService } from '../_service/data-service/data.service';
 import { PostService } from '../_service/post-service/post.service';
-// import { NzMessageService } from 'ng-zorro-antd/message';
-// import { DataService } from '../_service/data-service/data.service';
-// import { PostService } from '../_service/post-service/post.service';
+import { ProfileService } from '../_service/profile-service/profile.service';
+import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
 @Component({
   selector: 'app-posts',
@@ -15,24 +21,44 @@ import { PostService } from '../_service/post-service/post.service';
   styleUrls: ['./posts.component.css'],
 })
 export class PostsComponent implements OnInit {
-  @Input() profile:any={};
-  @Input() listPosts:any[]=[];
+  @Output() postUpdate = new EventEmitter<any>();
+  @Output() postDelete = new EventEmitter<any>();
+  @Input() profile: any = {};
+  @Input() post: any = {};
   user: any = {};
-  postSelect:any;
+  postId: any;
+  postSelect: any;
   postForm!: FormGroup;
-  isVisible:boolean = false;
+  isVisible: boolean = false;
+  isVisibleComment: boolean = false;
   file: any;
   isLoading: boolean = false;
   loading: boolean = false;
   pictureUrl: String = '';
+  listComment: any[] = [];
+  commentContent: string = '';
+  commentSelect: any;
+  typeContext='';
+  isLoadingComment:boolean=false;
   constructor(
     private postService: PostService,
     private msg: NzMessageService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private commentService: CommentService,
+    private profileService: ProfileService,
+    private dataService: DataService,
+    private nzContextMenuService: NzContextMenuService,
+    public websocket: WebsocketService,
   ) {}
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
+    this.postId = this.route.snapshot.paramMap.get('id');
+    if (this.postId) {
+      this.getPostById(this.postId);
+    }
     this.postForm = this.fb.group({
       id: [''],
       author_id: [this.user.id],
@@ -40,54 +66,67 @@ export class PostsComponent implements OnInit {
       count_likes: [0],
       picture_url: [''],
       privacy: [PRIVACY.PUBLIC],
-      posting_time: ['']
+      posting_time: [''],
     });
   }
 
-  afterCreatePost(post:any){
-    post.avatar_url = this.profile.avatar_url;
-    post.name = this.profile.name;
-    this.listPosts = [post,...this.listPosts];
+  goBackHome() {
+    this.router.navigate(['home']);
   }
 
-  onOpenContextMenu(data:any){
+  onOpenContextMenu(data: any) {
     this.postSelect = data;
+    this.typeContext = 'post';
   }
 
-  openModalEdit(){
+  openModalEdit() {
     this.isVisible = true;
     this.postForm.patchValue(this.postSelect);
   }
-  closeModalEdit(){
+  closeModalEdit() {
     this.isVisible = false;
     this.postForm.reset();
-
   }
 
-  updatePost(){
-      this.isLoading=true;
-      this.postService.updatePost(this.postForm.value,this.postForm.controls['id'].value,this.file).subscribe(res=>{
-        if(res.success && res.code == 200){
-          this.isLoading=false;
-          let index = this.listPosts.findIndex(x=>x.id == res.data.id)
-          this.listPosts.splice(index,1,res.data);
-          this.msg.success('Update post successfully!');
-        } else {
-          this.isLoading=false;
-          this.msg.error(res.message);
+  getPostById(id: any) {
+    this.postService.getPost(id,this.user.id).subscribe((res) => {
+      if (res.success && res.code == 200) {
+        this.post = res.data;
+      } else this.msg.error(res.message);
+    });
+  }
+
+  updatePost() {
+    this.isLoading = true;
+    this.postService
+      .updatePost(
+        this.postForm.value,
+        this.postForm.controls['id'].value,
+        this.file
+      )
+      .subscribe(
+        (res) => {
+          if (res.success && res.code == 200) {
+            this.isLoading = false;
+            this.postUpdate.emit(res.data);
+            this.msg.success('Update post successfully!');
+          } else {
+            this.isLoading = false;
+            this.msg.error(res.message);
+          }
+        },
+        (err) => {
+          this.isLoading = false;
+          this.msg.error(err.detail);
         }
-      },err=>{
-        this.isLoading=false;
-        this.msg.error(err.detail);
-      })
+      );
   }
 
   deletePost() {
     this.postService.deletePost(this.postSelect.id).subscribe(
       (res: any) => {
         if (res.success && res.code == 200) {
-          const index = this.listPosts.findIndex((x) => x.id == res.data.id);
-          this.listPosts.splice(index, 1);
+          this.postDelete.emit(res.data.id);
           this.msg.success('Delete post successfully!');
         } else this.msg.error(res.message);
       },
@@ -143,5 +182,95 @@ export class PostsComponent implements OnInit {
         this.loading = false;
         break;
     }
+  }
+
+  onClickComment() {
+    this.isVisibleComment = !this.isVisibleComment;
+    const id = this.postId ? this.postId : this.post.id;
+    this.getListCommentByPostId(id);
+    this.commentsFilter(id);
+  }
+
+  getListCommentByPostId(id: number) {
+    this.commentService.getListCommentByPostId(id, 0, 9999).subscribe((res) => {
+      if (res.success && res.code == 200) {
+        this.listComment = res.data;
+      } else this.msg.error(res.message);
+    });
+  }
+
+  onClickUser(id: number) {
+    if (id != this.user.id) {
+      this.profileService.getProfile(id).subscribe((res) => {
+        if (res.success && res.code == 200) {
+          this.dataService.sendProfileFriend(res.data);
+        } else this.msg.error(res.message);
+      });
+    } else this.dataService.sendIndexView(1);
+  }
+
+  onDeleteImageSelect() {
+    this.pictureUrl = '';
+    this.file = null;
+  }
+
+  onCreateComment() {
+    if (this.commentContent || this.file) {
+      const comment = {
+        user_id: this.profile.id,
+        content: this.commentContent,
+        post_id: this.post.id,
+        name: this.profile.name,
+        avatar_url: this.profile.avatar_url,
+      };
+      this.isLoadingComment=true;
+      this.commentService.createComment(comment, this.file).subscribe((res) => {
+        if (res.success && res.code == 200) {
+          this.isLoadingComment=false;
+          this.commentContent = '';
+          // this.listComment = [res.data, ...this.listComment];
+          this.onDeleteImageSelect();
+        } else {
+          this.isLoadingComment=false;
+          this.msg.error(res.message);
+          this.onDeleteImageSelect();
+        } 
+      });
+    }
+  }
+
+  onDeleteComment(id?: number) {
+    const idDelete = id ? id : this.commentSelect.id;
+    this.commentService.deleteComment(idDelete).subscribe((res) => {
+      if (res.success && res.code == 200) {
+        const index = this.listComment.findIndex((c) => c.id == res.data.id);
+        this.listComment.splice(index, 1);
+        this.msg.success(res.message);
+      } else this.msg.error(res.message);
+    });
+  }
+
+  contextMenu(
+    $event: MouseEvent,
+    menu: NzDropdownMenuComponent,
+    data: any
+  ): void {
+    this.nzContextMenuService.create($event, menu);
+    this.commentSelect = data;
+    this.typeContext='comment';
+  }
+
+  closeMenu(): void {
+    this.nzContextMenuService.close();
+    this.commentSelect = null;
+    this.postSelect = null;
+  }
+
+  commentsFilter(id: number) {
+    this.websocket.receiverComment = this.websocket.receiverComment.filter(
+      (c) => {
+        c.id != id;
+      }
+    );
   }
 }

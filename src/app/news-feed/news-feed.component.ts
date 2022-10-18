@@ -37,4 +37,20 @@ profile:any = {};
       } else this.msg.error(res.message);
     })
   }
+
+  afterCreatePost(post:any){
+    post.avatar_url = this.profile.avatar_url;
+    post.name = this.profile.name;
+    this.listPosts = [post,...this.listPosts];
+  }
+  
+  onUpdatePost(post:any){
+    let index = this.listPosts.findIndex(x=>x.id ==post.id)
+    this.listPosts.splice(index,1,post);
+  }
+
+  onDeletePost(id:any){
+    const index = this.listPosts.findIndex((x) => x.id == id);
+    this.listPosts.splice(index, 1);
+  }
 }

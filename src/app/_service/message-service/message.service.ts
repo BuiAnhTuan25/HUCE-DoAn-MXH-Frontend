@@ -45,6 +45,22 @@ export class MessageService {
     );
   }
 
+  getListFriendChat(
+    idMe: number,
+    page: number,
+    pageSize: number
+  ): Observable<any> {
+    return this.http.get(
+      MESSAGE_API +
+        '/friend-chat/' +
+        idMe +
+        '?page=' +
+        page +
+        '&page-size=' +
+        pageSize
+    );
+  }
+
   createMessage(message: any): Observable<any> {
     return this.http.post(MESSAGE_API, message);
   }

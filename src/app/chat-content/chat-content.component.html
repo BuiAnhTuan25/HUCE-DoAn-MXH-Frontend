@@ -4,7 +4,7 @@
       <div nz-col nzSpan="3">
         <img
           class="avatar"
-          [src]="chatWith.avatar"
+          [src]="chatWith.avatar_url"
           alt="avatar"
         />
       </div>
@@ -58,7 +58,7 @@
             <div>
               <img
                 class="avatar-message-receiver"
-                [src]="chatWith.avatar"
+                [src]="chatWith.avatar_url"
                 alt="avatar"
               />
               <div
@@ -71,7 +71,7 @@
               </div>
             </div>
           </li>
-          <li class="clearfix" *ngIf="message.sender_id == user.id">
+          <li class="clearfix" *ngIf="message.sender_id == user.id && message.receiver_id == chatWith.id">
             <div>
               <img
                 class="avatar-message-send"

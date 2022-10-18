@@ -43,7 +43,7 @@
       <button nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" *ngIf="profile?.id != user.id && friend?.friend_status == 'WAITING'" nz-button class="button-add" nzType="default">
         <i class="fa-solid fa-user-plus icon"></i>waiting
       </button>
-      <button *ngIf="profile?.id != user.id" nz-button class="button-add" nzType="primary">
+      <button (click)="onClickChat()" *ngIf="profile?.id != user.id" nz-button class="button-add" nzType="primary">
         <i class="fa-brands fa-facebook-messenger icon"></i>Chat
       </button>
     </div>

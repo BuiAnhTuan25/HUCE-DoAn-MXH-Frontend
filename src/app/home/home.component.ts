@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
     await this.getProfile(this.user.id);
     this.websocket._connect(this.user.id);
+    this.websocket._connectTopic();
     this.searchChange.pipe(
       debounceTime(1000))
       .subscribe(model => {
@@ -43,6 +44,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.dataService.receiveProfileFriend.subscribe(profileFriend=>{
       this.selectIndex = 3;
+    })
+    this.dataService.receiveIndexView.subscribe(indexView=>{
+      this.selectIndex = indexView;
     })
   }
 
@@ -69,7 +73,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onClickChat() {
-    this.selectIndex = 2;
+    if(this.selectIndex != 2){
+      this.selectIndex = 2;
+      this.dataService.sendIndexView(2);
+    }
+    
   }
 
   onClickNewssFeed() {
