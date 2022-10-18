@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataService {
   private chatWith: Subject<any> = new Subject<any>();
   private profile: Subject<any> = new Subject<any>();
   private profileFriend: Subject<any> = new Subject<any>();
-
-  constructor() { }
+  private indexView: Subject<any> = new Subject<any>();
+  private firstChat: Subject<any> = new Subject<any>();
+  constructor() {}
 
   public get receiveChatWith() {
     return this.chatWith;
@@ -33,5 +34,21 @@ export class DataService {
 
   public sendProfileFriend(profileFriend: any) {
     this.profileFriend.next(profileFriend);
+  }
+
+  public get receiveIndexView() {
+    return this.indexView;
+  }
+
+  public sendIndexView(indexView: any) {
+    this.indexView.next(indexView);
+  }
+
+  public get receiveFirstChat() {
+    return this.firstChat;
+  }
+
+  public sendFirstChat(firstChat: any) {
+    this.firstChat.next(firstChat);
   }
 }

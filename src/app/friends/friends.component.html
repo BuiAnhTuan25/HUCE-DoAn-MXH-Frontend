@@ -5,7 +5,11 @@
   </div>
   <div nz-row class="tabs">
     <nz-tabset class="tabset">
-      <nz-tab [nzTitle]="postTitle"><app-posts [profile]="profileFriend" [listPosts]="listPosts"></app-posts></nz-tab>
+      <nz-tab [nzTitle]="postTitle">
+        <div *ngFor="let post of listPosts">
+          <app-posts [profile]="profileFriend" [post]="post"></app-posts>
+        </div>
+      </nz-tab>
     </nz-tabset>
     <ng-template #postTitle>
       <div class="title">Posts</div>

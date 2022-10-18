@@ -29,6 +29,15 @@ export class ChatComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
     this.dataService.receiveProfile.subscribe((profile)=>(this.profile=profile));
+    this.dataService.receiveChatWith.subscribe(chatWith=>{
+      this.chatWith = chatWith;
+      this.getListMessage(this.user.id, this.chatWith.id);
+    })
+    this.dataService.receiveIndexView.subscribe(i=>{
+      if(i==2){
+        this.chatWith = null;
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -41,15 +50,20 @@ export class ChatComponent implements OnInit,OnDestroy {
       .subscribe((res) => {
         if (res.success && res.code == 200) {
           this.listMessages = res.data;
+          this.messageFilter();
         } else this.msg.error(res.message);
       },err =>{
         this.msg.error(err);
       });
   }
 
-  receiverChatWith(ev: any) {
-    this.chatWith = ev;
-    this.getListMessage(this.user.id, this.chatWith.id);
+  messageFilter() {
+    this.websocket.receiverMessage = this.websocket.receiverMessage.filter((msg=>{
+      return msg.receiver_id != this.chatWith.id;
+    }));
+    this.websocket.receiverMessage = this.websocket.receiverMessage.filter((msg=>{
+      return msg.sender_id!=this.chatWith.id;
+    }));
   }
 
   onClickHome(){

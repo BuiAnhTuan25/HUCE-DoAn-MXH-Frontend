@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from '../_service/data-service/data.service';
-import { FriendService } from '../_service/friend-service/friend.service';
+import { MessageService } from '../_service/message-service/message.service';
 import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
 @Component({
@@ -13,16 +13,35 @@ export class ListChatComponent implements OnInit {
   @Output() sendChatWith = new EventEmitter<any>();
   friends:any[]=[];
   user:any;
-  index!:number;
-  constructor(private friendService: FriendService,private msg: NzMessageService,private dataService:DataService,private websocket:WebsocketService) { }
+  index!:any;
+  constructor(private messageService: MessageService,private msg: NzMessageService,private dataService:DataService,private websocket:WebsocketService) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
-    this.getListFriend(this.user.id);
+    this.getListFriendChat(this.user.id);
+    this.dataService.receiveIndexView.subscribe(i=>{
+      if(i==2){
+        this.index = null;
+      }
+    })
+    this.dataService.receiveChatWith.subscribe(chatWith=>{
+      for(let i=0; i<this.friends.length; i++){
+        if(this.friends[i].friend_id == chatWith.id){
+          this.index = i;
+        }
+      }
+    });
+    this.dataService.receiveFirstChat.subscribe(firstChat=>{
+      this.friends = this.friends.filter(friend=>{
+        return friend.id != firstChat.id;
+      });
+      this.friends = [firstChat,...this.friends];
+      this.index=0;
+    })
   }
 
-  getListFriend(id:number){
-    this.friendService.getListFriend(id,0,9999).subscribe((res)=>{
+  getListFriendChat(id:number){
+    this.messageService.getListFriendChat(id,0,9999).subscribe((res)=>{
       if(res.success && res.code == 200){
         this.friends=res.data;
       } else this.msg.error(res.message);
@@ -32,17 +51,16 @@ export class ListChatComponent implements OnInit {
   }
 
   onClickChat(chat:any,i:number){
-    let type;
-    if(chat.id_friend) type='friend';
-    else type='group';
-    this.index=i;
-    const chatWith={
-      "id":chat.friend_id,
-      "type":type,
-      "name":chat.name,
-      "avatar":chat.avatar_url
+    if(this.index != i){
+      const chatWith={
+        "id":chat.id,
+        "name":chat.name,
+        "avatar_url":chat.avatar_url
+      }
+      // this.sendChatWith.emit(chatWith);
+      this.dataService.sendChatWith(chatWith);
     }
-    this.sendChatWith.emit(chatWith);
+    
   }
 
 }

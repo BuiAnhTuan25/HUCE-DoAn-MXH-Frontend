@@ -10,8 +10,8 @@ const POST_API = 'http://localhost:8080/api/v1.0/posts';
 export class PostService {
   constructor(private http: HttpClient) {}
 
-  getPost(id: number): Observable<any> {
-    return this.http.get(POST_API + '/' + id);
+  getPost(id: number, idMe: number): Observable<any> {
+    return this.http.get(POST_API + '/' + idMe +'/'+ id);
   }
 
   getPostByAuthorId(

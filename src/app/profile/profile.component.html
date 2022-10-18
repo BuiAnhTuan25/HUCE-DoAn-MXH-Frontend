@@ -6,7 +6,12 @@
       </div>
       <div nz-row class="tabs">
         <nz-tabset class="tabset">
-          <nz-tab [nzTitle]="postTitle"><app-posts [profile]="profile" [listPosts]="listPosts"></app-posts></nz-tab>
+          <nz-tab [nzTitle]="postTitle">
+            <app-create-post *ngIf="profile.id == user.id" (post)="afterCreatePost($event)"></app-create-post>
+            <div *ngFor="let post of listPosts">
+              <app-posts [profile]="profile" [post]="post" (postUpdate)="onUpdatePost($event)" (postDelete)="onDeletePost($event)"></app-posts>
+            </div>
+          </nz-tab>
           <nz-tab [nzTitle]="friendsTitle"><app-list-friends #appListFriend></app-list-friends></nz-tab>
         </nz-tabset>
         <ng-template #postTitle>

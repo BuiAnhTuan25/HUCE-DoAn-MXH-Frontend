@@ -21,11 +21,12 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
 export class ChatContentComponent implements OnInit, AfterViewInit {
   @Input() chatWith: any;
   @Input() listMessages: any[] = [];
+  @Input() profile: any = {};
   @ViewChildren('messages') messages!: QueryList<any>;
   @ViewChild('content') content!: ElementRef;
   user: any;
+  listMessageWebsocket:any[]=[];
   contentMessage: string = '';
-  profile: any = {};
 
   constructor(
     private msg: NzMessageService,
@@ -36,8 +37,6 @@ export class ChatContentComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
-    this.profile = JSON.parse(localStorage.getItem('profile-user')!);
-    this.messageFilter(this.chatWith.id);
   }
 
   ngAfterViewInit() {
@@ -59,16 +58,12 @@ export class ChatContentComponent implements OnInit, AfterViewInit {
         receiver_id: this.chatWith.id,
         content: this.contentMessage,
         message_type: 'MESSAGE',
+        avatar_url:this.profile.avatar_url,
       };
       this.websocket._send(message);
       this.contentMessage = '';
+      this.dataService.sendFirstChat(this.chatWith)
     }
   }
-  messageFilter(id: number) {
-    this.websocket.receiverMessage = this.websocket.receiverMessage.filter(
-      (msg) => {
-        msg.receiver_id = id;
-      }
-    );
-  }
+
 }

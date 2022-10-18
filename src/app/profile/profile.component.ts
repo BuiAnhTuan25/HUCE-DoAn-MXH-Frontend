@@ -15,6 +15,7 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
 export class ProfileComponent implements OnInit {
   @ViewChild('appListFriend') appListFriend !: ListChatComponent;
   profile:any={};
+  user:any={};
   listPosts:any[]=[];
 
   constructor(
@@ -26,6 +27,7 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(){
+    this.user = JSON.parse(localStorage.getItem('auth-user')!);
     this.dataService.receiveProfile.subscribe(
       (profile) => {
         this.profile = profile;
@@ -39,6 +41,7 @@ export class ProfileComponent implements OnInit {
     this.websocket._disconnect();
   }
 
+  
   getListPostByAuthorId(id:number){
     this.postService.getPostByAuthorId(id,0,9999).subscribe(res=>{
       if(res.success && res.code == 200){
@@ -48,5 +51,22 @@ export class ProfileComponent implements OnInit {
       this.msg.error(err.message);
     })
   }
+  
+  afterCreatePost(post:any){
+    post.avatar_url = this.profile.avatar_url;
+    post.name = this.profile.name;
+    this.listPosts = [post,...this.listPosts];
+  }
+  
+  onUpdatePost(post:any){
+    let index = this.listPosts.findIndex(x=>x.id ==post.id)
+    this.listPosts.splice(index,1,post);
+  }
+
+  onDeletePost(id:any){
+    const index = this.listPosts.findIndex((x) => x.id == id);
+    this.listPosts.splice(index, 1);
+  }
+
 
 }
