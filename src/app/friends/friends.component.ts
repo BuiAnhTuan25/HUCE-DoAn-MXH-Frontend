@@ -14,6 +14,11 @@ export class FriendsComponent implements OnInit {
   friend: any = {};
   profileFriend: any = {};
   listPosts:any[]=[];
+  page!:number;
+totalPage!:number;
+throttle = 300;
+scrollDistance = 1;
+errorMessage:string='';
   constructor(
     private dataService: DataService,
     private friendService: FriendService,
@@ -22,11 +27,12 @@ export class FriendsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.page=0;
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
     this.dataService.receiveProfileFriend.subscribe((profileFriend) => {
       this.profileFriend = profileFriend;
       this.getFriend(this.user.id, this.profileFriend.id);
-      this.getListPostByAuthorId(this.profileFriend.id)
+      this.getListPostByAuthorId(this.profileFriend.id, this.page)
     });
   }
 
@@ -44,16 +50,22 @@ export class FriendsComponent implements OnInit {
     );
   }
 
-  getListPostByAuthorId(id: number) {
-    this.postService.getPostByAuthorId(id, 0, 9999).subscribe(
+  getListPostByAuthorId(id: number,page: number) {
+    this.postService.getPostByAuthorId(id, page, 20).subscribe(
       (res) => {
-        if (res.success && res.code == 200) {
-          this.listPosts = res.data;
+        if(res.success && res.code == 200){
+          this.totalPage = res.pagination.total_page;
+          if(page==0) this.listPosts = res.data;
+          else this.listPosts=[...this.listPosts,...res.data];
         } else this.msg.error(res.message);
-      },
-      (err) => {
-        this.msg.error(err.message);
-      }
-    );
+      })
+    }
+
+  onScrollDown(){
+    this.page=this.page+1;
+    if(this.page<=this.totalPage){
+      this.getListPostByAuthorId(this.profileFriend.id,this.page);
+    } else this.errorMessage = 'No more posts...';
+    
   }
 }

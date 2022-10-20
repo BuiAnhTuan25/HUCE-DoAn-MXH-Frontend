@@ -40,7 +40,7 @@ export class CreatePostComponent implements OnInit {
   }
 
   getPostByAuthorId(id: number) {
-    this.postService.getPostByAuthorId(id, 0, 9999).subscribe(
+    this.postService.getPostByAuthorId(id, 0, 20).subscribe(
       (res) => {
         if (res.success && res.code == 200) {
           this.listPosts = res.data;

@@ -14,8 +14,8 @@ export class LikeService {
     return this.http.post(LIKE_API, like);
   }
 
-  deleteLike(id: number): Observable<any> {
-    return this.http.delete(LIKE_API + '/' + id);
+  deleteLike(postId: number, userId:number): Observable<any> {
+    return this.http.delete(LIKE_API + '/' + postId +'/' +userId);
   }
 }
 

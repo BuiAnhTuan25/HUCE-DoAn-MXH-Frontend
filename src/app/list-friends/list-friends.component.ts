@@ -16,6 +16,8 @@ export class ListFriendsComponent implements OnInit {
   listFriended: any[] = [];
   listFriendConfirm: any[] = [];
   selectFriend:any;
+  page!:number;
+  totalPage!:number;
   constructor(
     private dataService: DataService,
     private friendService: FriendService,
@@ -24,9 +26,10 @@ export class ListFriendsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.page=0;
     this.dataService.receiveProfile.subscribe((profile) => {
       this.profile = profile;
-      this.getListFriend(this.profile.id);
+      this.getListFriend(this.profile.id,this.page);
     });
   }
 
@@ -34,9 +37,10 @@ export class ListFriendsComponent implements OnInit {
     this.selectFriend = data;
   }
 
-  getListFriend(id: number) {
-    this.friendService.getListFriend(id, 0, 9999).subscribe((res) => {
+  getListFriend(id: number,page:number) {
+    this.friendService.getListFriend(id, page, 50).subscribe((res) => {
       if (res.success && res.code == 200) {
+        this.totalPage = res.pagination.total_page;
         this.friends = res.data;
         this.listFriended = this.friends.filter(
           (friend) => friend.friend_status == 'FRIENDED'

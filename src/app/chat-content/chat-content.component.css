@@ -11,10 +11,31 @@ li{
     height: 103%; 
     overflow: hidden auto;
 }
-.overflow-y::-webkit-scrollbar { 
-    width: 0 !important;
-    display: none; 
-}
+/* .overflow-y::-webkit-scrollbar { 
+      width: 0 !important;
+      display: none; 
+  } */
+  /* width */
+  .overflow-y::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  .overflow-y::-webkit-scrollbar-track {
+    
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  .overflow-y::-webkit-scrollbar-thumb {
+    background: #7e7e7e; 
+    border-radius: 10px;
+  }
+  /* Handle on hover */
+  /* .overflow-y::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+  } */
+  
 
 .main{
     height: 100%;
@@ -38,7 +59,9 @@ li{
     margin-top: 15px;
 }
 .content{
-    padding: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     height: 455px;
 
 }
@@ -102,6 +125,7 @@ color:#1890ff;
     border-radius: 50%;
     float:right;
     margin-top: 4px;
+    margin-right: 10px;
 }
 .avatar-message-receiver{
     width: 30px;

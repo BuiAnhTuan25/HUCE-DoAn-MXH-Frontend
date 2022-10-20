@@ -1,16 +1,23 @@
 
     <div id="main">
-      <div class="overflow-y">
+      <div class="overflow-y"
+      infinite-scroll
+    [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollThrottle]="throttle"
+    [scrollWindow]="false"
+    (scrolled)="onScrollDown()"
+      >
       <div nz-row class="infomation">
         <app-personal-infomation [profile]="profile"></app-personal-infomation>
       </div>
       <div nz-row class="tabs">
-        <nz-tabset class="tabset">
+        <nz-tabset class="tabset" [(nzSelectedIndex)]="selectIndex">
           <nz-tab [nzTitle]="postTitle">
             <app-create-post *ngIf="profile.id == user.id" (post)="afterCreatePost($event)"></app-create-post>
             <div *ngFor="let post of listPosts">
               <app-posts [profile]="profile" [post]="post" (postUpdate)="onUpdatePost($event)" (postDelete)="onDeletePost($event)"></app-posts>
             </div>
+            <div style="color:#ffffff">{{errorMessage}}</div>
           </nz-tab>
           <nz-tab [nzTitle]="friendsTitle"><app-list-friends #appListFriend></app-list-friends></nz-tab>
         </nz-tabset>

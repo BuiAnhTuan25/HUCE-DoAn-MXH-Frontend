@@ -34,6 +34,7 @@ import { CreatePostComponent } from './create-post/create-post.component';
 import { NewsFeedComponent } from './news-feed/news-feed.component';
 import { FriendsComponent } from './friends/friends.component';
 import { RegisterVerifyComponent } from './register-verify/register-verify.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { RegisterVerifyComponent } from './register-verify/register-verify.compo
     BrowserAnimationsModule,
     NgZorroAntdModule,
     SocialLoginModule,
+    InfiniteScrollModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

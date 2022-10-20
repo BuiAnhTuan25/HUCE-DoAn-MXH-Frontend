@@ -11,6 +11,7 @@ import { Observable, Observer } from 'rxjs';
 import { PRIVACY } from '../_model/privacy';
 import { CommentService } from '../_service/comment-service/comment.service';
 import { DataService } from '../_service/data-service/data.service';
+import { LikeService } from '../_service/like-service/like.service';
 import { PostService } from '../_service/post-service/post.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { WebsocketService } from '../_service/websocket-service/websocket.service';
@@ -51,6 +52,7 @@ export class PostsComponent implements OnInit {
     private dataService: DataService,
     private nzContextMenuService: NzContextMenuService,
     public websocket: WebsocketService,
+    private likeService: LikeService,
   ) {}
 
   ngOnInit(): void {
@@ -184,6 +186,28 @@ export class PostsComponent implements OnInit {
     }
   }
 
+  onClickLike(){
+    if(this.post.is_like){
+      this.likeService.deleteLike(this.post.id,this.user.id).subscribe(res=>{
+        if(res.success && res.code == 200){
+          this.post.is_like = false;
+          this.post.count_likes--;
+        } else this.msg.error(res.message);
+      });
+    } else {
+      const like={
+        post_id:this.post.id,
+        user_id:this.user.id
+      }
+      this.likeService.createLike(like).subscribe(res=>{
+        if(res.success && res.code == 200){
+          this.post.is_like = true;
+          this.post.count_likes++;
+        } else this.msg.error(res.message);
+      })
+    }
+  }
+
   onClickComment() {
     this.isVisibleComment = !this.isVisibleComment;
     const id = this.postId ? this.postId : this.post.id;
@@ -192,7 +216,7 @@ export class PostsComponent implements OnInit {
   }
 
   getListCommentByPostId(id: number) {
-    this.commentService.getListCommentByPostId(id, 0, 9999).subscribe((res) => {
+    this.commentService.getListCommentByPostId(id, 0, 20).subscribe((res) => {
       if (res.success && res.code == 200) {
         this.listComment = res.data;
       } else this.msg.error(res.message);

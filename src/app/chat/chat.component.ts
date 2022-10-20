@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit,OnDestroy {
 
   getListMessage(sender: number, receiver: number) {
     this.messageService
-      .getListMessagesFriend(sender, receiver, 0, 999)
+      .getListMessagesFriend(sender, receiver, 0, 40)
       .subscribe((res) => {
         if (res.success && res.code == 200) {
           this.listMessages = res.data;
