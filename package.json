@@ -22,6 +22,7 @@
     "angularx-social-login": "^3.5.7",
     "net": "^1.0.2",
     "ng-zorro-antd": "^13.3.2",
+    "ngx-infinite-scroll": "^10.0.1",
     "rxjs": "~7.5.0",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",

@@ -14,6 +14,11 @@ export class NewsFeedComponent implements OnInit {
 listPosts:any[]=[];
 user:any = {};
 profile:any = {};
+page!:number;
+totalPage!:number;
+throttle = 300;
+scrollDistance = 1;
+errorMessage:string='';
   constructor(
     private dataService: DataService,
     private postService: PostService,
@@ -27,13 +32,16 @@ profile:any = {};
       this.profile = profile;
     }
   );
-  this.getNewsFeed(this.user.id);
+  this.page=0;
+  this.getNewsFeed(this.user.id,this.page);
   }
 
-  getNewsFeed(id:number){
-    this.postService.getNewsFeed(id,0,9999).subscribe(res=>{
+  getNewsFeed(id:number,page:number){
+    this.postService.getNewsFeed(id,page,20).subscribe(res=>{
       if(res.success && res.code == 200){
-        this.listPosts = res.data;
+        this.totalPage = res.pagination.total_page;
+        if(page==0) this.listPosts = res.data;
+        else this.listPosts=[...this.listPosts,...res.data];
       } else this.msg.error(res.message);
     })
   }
@@ -52,5 +60,13 @@ profile:any = {};
   onDeletePost(id:any){
     const index = this.listPosts.findIndex((x) => x.id == id);
     this.listPosts.splice(index, 1);
+  }
+
+  onScrollDown(){
+    this.page=this.page+1;
+    if(this.page<=this.totalPage){
+      this.getNewsFeed(this.user.id,this.page);
+    } else this.errorMessage = 'No more posts...';
+    
   }
 }

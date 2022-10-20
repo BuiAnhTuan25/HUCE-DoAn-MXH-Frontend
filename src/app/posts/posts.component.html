@@ -44,7 +44,7 @@
       <div class="likes">{{ post.count_likes }} Likes</div>
       <div class="or1"></div>
       <div nz-row>
-        <div nz-col [ngClass]="post.is_like? 'button button-select' : 'button'">
+        <div (click)="onClickLike()" nz-col [ngClass]="post.is_like? 'button button-select' : 'button'">
           <i *ngIf="!post.is_like" class="fa-regular fa-heart icon"></i>
           <i *ngIf="post.is_like" class="fa-solid fa-heart icon"></i>
           Like

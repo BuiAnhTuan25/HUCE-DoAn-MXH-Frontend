@@ -26,22 +26,24 @@ export class ListChatComponent implements OnInit {
     })
     this.dataService.receiveChatWith.subscribe(chatWith=>{
       for(let i=0; i<this.friends.length; i++){
-        if(this.friends[i].friend_id == chatWith.id){
+        if(this.friends[i].id == chatWith.id){
           this.index = i;
         }
       }
     });
     this.dataService.receiveFirstChat.subscribe(firstChat=>{
-      this.friends = this.friends.filter(friend=>{
-        return friend.id != firstChat.id;
-      });
-      this.friends = [firstChat,...this.friends];
-      this.index=0;
-    })
+      if(firstChat.id != this.friends[0].id){
+        this.friends = this.friends.filter(friend=>{
+          return friend.id != firstChat.id;
+        });
+        this.friends = [firstChat,...this.friends];
+        this.index=0;
+      }
+      })
   }
 
   getListFriendChat(id:number){
-    this.messageService.getListFriendChat(id,0,9999).subscribe((res)=>{
+    this.messageService.getListFriendChat(id,0,20).subscribe((res)=>{
       if(res.success && res.code == 200){
         this.friends=res.data;
       } else this.msg.error(res.message);
