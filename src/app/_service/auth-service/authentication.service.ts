@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-const AUTH_API = 'http://localhost:8080/api/v1.0/auth';
+const AUTH_API = 'http://localhost:8080/api/v1/auth';
 @Injectable({
   providedIn: 'root',
 })

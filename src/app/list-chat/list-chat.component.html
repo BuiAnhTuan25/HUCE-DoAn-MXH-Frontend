@@ -1,11 +1,11 @@
 <div class="list-chat">
   <div class="chat">Chat</div>
   <nz-input-group nzPrefixIcon="search">
-    <input nz-input type="text" placeholder="Find friend" />
+    <input (keyup.enter)="onSearch()" [(ngModel)]="fullTextSearch" nz-input type="text" placeholder="Find friend" />
   </nz-input-group>
   <div class="list-friend">
     <div class="overflow-y">
-      <div *ngFor="let friend of friends; index as i">
+      <div *ngFor="let friend of listFriendShow; index as i">
         <div [ngClass]="index==i?'friend-select':'friend'" nz-row (click)="onClickChat(friend,i)">
           
           <div nz-col nzSpan="7">
@@ -17,7 +17,8 @@
           </div>
           <div class="name-friend" nz-col nzSpan="14">
             <div>{{friend.name}}</div>
-            <div class="offline">Offline</div>
+            <div *ngIf="friend.active_status == 'OFFLINE'" class="offline">Offline</div>
+            <div *ngIf="friend.active_status == 'ONLINE'" class="online">Online</div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const LIKE_API = 'http://localhost:8080/api/v1.0/likes';
+const LIKE_API = 'http://localhost:8080/api/v1/likes';
 
 @Injectable({
   providedIn: 'root'

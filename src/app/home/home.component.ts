@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     await this.getProfile(this.user.id);
     this.websocket._connect(this.user.id);
     this.websocket._connectTopic();
+    this.updateActiveStatus(this.user.id,'ONLINE');
     this.searchChange.pipe(
       debounceTime(1000))
       .subscribe(model => {
@@ -51,6 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.updateActiveStatus(this.user.id,'OFFLINE');
     this.websocket._disconnect();
   }
 
@@ -104,5 +106,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   async onClickFriend(){
     this.dataService.sendProfileFriend(this.profileSearch);
     this.selectIndex=3;
+  }
+
+  updateActiveStatus(id:number,activeStatus:string){
+    this.profileService.updateActiveStatus(id,activeStatus).subscribe();
   }
 }

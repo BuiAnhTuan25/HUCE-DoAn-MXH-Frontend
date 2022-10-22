@@ -10,7 +10,8 @@
       </div>
       <div class="name-friend" nz-col nzSpan="18">
         <div>{{chatWith.name}}</div>
-        <div class="online" nz-col nzSpan="18">Online</div>
+        <div *ngIf="chatWith.active_status == 'OFFLINE'" class="offline" nz-col nzSpan="18">Offline</div>
+        <div *ngIf="chatWith.active_status == 'ONLINE'" class="online" nz-col nzSpan="18">Online</div>
       </div>
     </div>
   </div>

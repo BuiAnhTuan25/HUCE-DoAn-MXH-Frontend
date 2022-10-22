@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OauthService {
-  oauthURL = 'http://localhost:8080/api/v1.0/auth-social';
+  oauthURL = 'http://localhost:8080/api/v1/auth-social';
 
   constructor(private httpClient: HttpClient) { }
 
