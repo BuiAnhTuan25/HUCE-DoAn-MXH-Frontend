@@ -37,7 +37,13 @@
             </div>
         </div>
       </div>
-      <div class="title">{{ post.content }}</div>
+      <div class="title">
+        <span *ngIf="isShowMore">{{ post.content.slice(0,300) }}</span>
+        <span *ngIf="isShowMore && post.content.length>300" style="color:#ffffff">...</span>
+        <span class="show-more" *ngIf="isShowMore && post.content.length>300" (click)="onClickReadMore()">more</span>
+        <span *ngIf="!isShowMore">{{post.content}}</span>
+        <div class="show-more" *ngIf="!isShowMore" (click)="onClickReadMore()">less</div>
+      </div>
       <div *ngIf="post.picture_url">
         <img class="image" [src]="post.picture_url" alt="avatar" />
       </div>
@@ -74,7 +80,7 @@
             placeholder="Write something"
           ></textarea>
           <nz-upload
-            nzAction="http://localhost:8080/api/v1.0/upload"
+            nzAction="http://localhost:8080/api/v1/upload"
             [nzHeaders]="{ authorization: 'authorization-text' }"
             [nzShowUploadList]="false"
             [nzBeforeUpload]="beforeUpload"
@@ -208,7 +214,7 @@
           nz-col
           nzSpan="6"
           class="avatar-uploader"
-          nzAction="http://localhost:8080/api/v1.0/upload"
+          nzAction="http://localhost:8080/api/v1/upload"
           nzName="avatar"
           nzListType="picture-card"
           [nzShowUploadList]="false"

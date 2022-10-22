@@ -51,6 +51,7 @@ export class ProfileComponent implements OnInit {
     this.postService.getPostByAuthorId(id,this.page,20).subscribe(res=>{
       if(res.success && res.code == 200){
         this.totalPage = res.pagination.total_page;
+        this.page=page;
         if(page==0) this.listPosts = res.data;
         else this.listPosts=[...this.listPosts,...res.data];
       } else this.msg.error(res.message);
@@ -75,7 +76,7 @@ export class ProfileComponent implements OnInit {
 
   onScrollDown(){
     if(this.selectIndex == 0){
-      this.page=this.page+1;
+      this.page++;
       if(this.page<=this.totalPage){
         this.getListPostByAuthorId(this.user.id,this.page);
       } else this.errorMessage = 'No more posts...';
@@ -83,9 +84,17 @@ export class ProfileComponent implements OnInit {
     }
 
     if(this.selectIndex == 1){
-      this.appListFriend.page++;
-      if(this.appListFriend.page<=this.appListFriend.totalPage){
-        this.appListFriend.getListFriend(this.user.id,this.appListFriend.page);
+      if(this.appListFriend.selectIndex == 0){
+        this.appListFriend.pageFriended++;
+        if(this.appListFriend.pageFriended<=this.appListFriend.totalPageFriended){
+          this.appListFriend.getListFriend(this.user.id,'FRIENDED',this.appListFriend.pageFriended);
+        }
+      }
+      if(this.appListFriend.selectIndex == 1){
+        this.appListFriend.pageFriendConfirm++;
+        if(this.appListFriend.pageFriendConfirm<=this.appListFriend.totalPageFriendConfirm){
+          this.appListFriend.getListFriend(this.user.id,'CONFIRM',this.appListFriend.pageFriendConfirm);
+        }
       }
     }
     

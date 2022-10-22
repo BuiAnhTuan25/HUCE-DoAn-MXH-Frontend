@@ -10,6 +10,8 @@ export class DataService {
   private profileFriend: Subject<any> = new Subject<any>();
   private indexView: Subject<any> = new Subject<any>();
   private firstChat: Subject<any> = new Subject<any>();
+  private activeStatusFriend: Subject<any> = new Subject<any>();
+  
   constructor() {}
 
   public get receiveChatWith() {
@@ -50,5 +52,13 @@ export class DataService {
 
   public sendFirstChat(firstChat: any) {
     this.firstChat.next(firstChat);
+  }
+
+  public get receiveActiveStatusFriend() {
+    return this.activeStatusFriend;
+  }
+
+  public sendActiveStatusFriend(activeStatusFriend: any) {
+    this.activeStatusFriend.next(activeStatusFriend);
   }
 }

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const FRIEND_API = 'http://localhost:8080/api/v1.0/friends';
+const FRIEND_API = 'http://localhost:8080/api/v1/friends';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +10,9 @@ const FRIEND_API = 'http://localhost:8080/api/v1.0/friends';
 export class FriendService {
   constructor(private http: HttpClient) {}
 
-  getListFriend(id: number, page: number, pageSize: number): Observable<any> {
+  getListFriend(id: number,friendStatus: string, page: number, pageSize: number): Observable<any> {
     return this.http.get(
-      FRIEND_API + '/me-id/' + id + '?page=' + page + '&page-size=' + pageSize
+      FRIEND_API + '/me-id/' + id + '?friend-status='+friendStatus+ '&page=' + page + '&page-size=' + pageSize
     );
   }
 

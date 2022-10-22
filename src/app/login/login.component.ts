@@ -183,6 +183,7 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+
   signOut(): void {
     this.socialAuthService.signOut();
   }

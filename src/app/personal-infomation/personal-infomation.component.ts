@@ -265,9 +265,8 @@ export class PersonalInfomationComponent implements OnInit {
   onClickChat(){
     const chatWith={
       "id":this.profile.id,
-      "type":'friend',
       "name":this.profile.name,
-      "avatar":this.profile.avatar_url
+      "avatar_url":this.profile.avatar_url
     }
     this.dataService.sendIndexView(2);
     this.dataService.sendChatWith(chatWith);

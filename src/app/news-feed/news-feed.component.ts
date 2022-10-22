@@ -39,6 +39,7 @@ errorMessage:string='';
   getNewsFeed(id:number,page:number){
     this.postService.getNewsFeed(id,page,20).subscribe(res=>{
       if(res.success && res.code == 200){
+        this.page=page;
         this.totalPage = res.pagination.total_page;
         if(page==0) this.listPosts = res.data;
         else this.listPosts=[...this.listPosts,...res.data];
@@ -63,7 +64,7 @@ errorMessage:string='';
   }
 
   onScrollDown(){
-    this.page=this.page+1;
+    this.page++;
     if(this.page<=this.totalPage){
       this.getNewsFeed(this.user.id,this.page);
     } else this.errorMessage = 'No more posts...';

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { ListChatComponent } from 'src/app/list-chat/list-chat.component';
+import { DataService } from '../data-service/data.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -9,7 +11,7 @@ export class WebsocketService {
     receiverMessage:any[]=[];
     receiverNotification:any[]=[];
     receiverComment:any[]=[];
-    constructor(private msg:NzMessageService){}
+    constructor(private msg:NzMessageService,private dataService: DataService){}
     user:any=JSON.parse(localStorage.getItem('auth-user')!);
     // authToken:any=localStorage.getItem('auth-token')!;
     webSocketEndPoint: string = 'http://localhost:8080/message';
@@ -82,6 +84,9 @@ export class WebsocketService {
         let msg:any=JSON.parse(message.body);
         if(msg.message_type == 'NOTIFICATION'){
             this.receiverNotification = [msg,...this.receiverNotification];
+        }
+        else if(msg.message_type == 'ACTIVE_STATUS'){
+            this.dataService.sendActiveStatusFriend(msg);
         } else this.receiverComment = [msg,...this.receiverComment];
     }
 

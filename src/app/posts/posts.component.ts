@@ -41,6 +41,7 @@ export class PostsComponent implements OnInit {
   commentSelect: any;
   typeContext='';
   isLoadingComment:boolean=false;
+  isShowMore=true;
   constructor(
     private postService: PostService,
     private msg: NzMessageService,
@@ -296,5 +297,9 @@ export class PostsComponent implements OnInit {
         c.id != id;
       }
     );
+  }
+
+  onClickReadMore(){
+    this.isShowMore=!this.isShowMore;
   }
 }
