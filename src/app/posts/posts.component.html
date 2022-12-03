@@ -37,12 +37,15 @@
             </div>
         </div>
       </div>
-      <div class="title">
+      <div *ngIf="!post.is_share" class="title">
         <span *ngIf="isShowMore">{{ post.content.slice(0,300) }}</span>
         <span *ngIf="isShowMore && post.content.length>300" style="color:#ffffff">...</span>
         <span class="show-more" *ngIf="isShowMore && post.content.length>300" (click)="onClickReadMore()">more</span>
         <span *ngIf="!isShowMore">{{post.content}}</span>
         <div class="show-more" *ngIf="!isShowMore" (click)="onClickReadMore()">less</div>
+      </div>
+      <div *ngIf="post.is_share" class="title">
+        <a [href]="post.content">{{post.content}}</a>
       </div>
       <div *ngIf="post.picture_url">
         <img class="image" [src]="post.picture_url" alt="avatar" />
@@ -64,7 +67,7 @@
           <i *ngIf="isVisibleComment" class="fa-solid fa-comment icon"></i>
           Comment
         </div>
-        <div nz-col class="button">
+        <div nz-col class="button" (click)="openModalEdit(true)">
           <i class="fa-solid fa-share icon"></i>Share
         </div>
       </div>
@@ -184,7 +187,7 @@
 </div>
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu *ngIf="typeContext == 'post' && postSelect">
-    <li nz-menu-item (click)="openModalEdit()">
+    <li nz-menu-item (click)="openModalEdit(false)">
       <i class="fa-solid fa-pen-to-square icon-drop"></i>Edit post
     </li>
     <li nz-menu-divider></li>
@@ -208,7 +211,7 @@
   (nzOnCancel)="closeModalEdit()"
 >
   <ng-container *nzModalContent>
-    <form nz-form [formGroup]="postForm">
+    <form *ngIf="!isShare" nz-form [formGroup]="postForm">
       <div nz-row>
         <nz-upload
           nz-col
@@ -256,14 +259,41 @@
         </div>
       </div>
     </form>
+    <form *ngIf="isShare" nz-form [formGroup]="postForm">
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-form-item>
+            <nz-form-control>
+              <textarea
+                [nzAutosize]="{ minRows: 2, maxRows: 2 }"
+                placeholder="Write something"
+                formControlName="content"
+                nz-input
+              ></textarea>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class="privacy" nz-col nzSpan="19">
+            <nz-form-control>
+              <nz-radio-group formControlName="privacy">
+                <label nz-radio class="privacy" nzValue="PUBLIC">Public</label>
+                <label nz-radio class="privacy" nzValue="FRIEND">Friend</label>
+                <label nz-radio class="privacy" nzValue="PRIVATE"
+                  >Private</label
+                >
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </div>
+    </form>
   </ng-container>
 </nz-modal>
 <ng-template #header>
   <div>
-    Update post
+    {{ titleModal }}
     <button
       [nzLoading]="isLoading"
-      (click)="updatePost()"
+      (click)="savePost()"
       style="float: right"
       nz-button
       nzType="primary"

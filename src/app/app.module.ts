@@ -27,7 +27,6 @@ import { PersonalInfomationComponent } from './personal-infomation/personal-info
 import { ListFriendsComponent } from './list-friends/list-friends.component';
 import { PostsComponent } from './posts/posts.component';
 import { ListChatComponent } from './list-chat/list-chat.component';
-import { ListUserGroupComponent } from './list-user-group/list-user-group.component';
 import { ChatContentComponent } from './chat-content/chat-content.component';
 import { HomeComponent } from './home/home.component';
 import { CreatePostComponent } from './create-post/create-post.component';
@@ -35,6 +34,7 @@ import { NewsFeedComponent } from './news-feed/news-feed.component';
 import { FriendsComponent } from './friends/friends.component';
 import { RegisterVerifyComponent } from './register-verify/register-verify.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -49,13 +49,13 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     ListFriendsComponent,
     PostsComponent,
     ListChatComponent,
-    ListUserGroupComponent,
     ChatContentComponent,
     HomeComponent,
     CreatePostComponent,
     NewsFeedComponent,
     FriendsComponent,
     RegisterVerifyComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,

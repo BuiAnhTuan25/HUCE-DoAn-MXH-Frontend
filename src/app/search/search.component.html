@@ -1,0 +1,118 @@
+<div id="main">
+  <div
+    nz-row
+    class="overflow-y"
+    infinite-scroll
+    [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollThrottle]="throttle"
+    [scrollWindow]="false"
+    (scrolled)="onScrollDown()"
+  >
+    <div nz-col nzSpan="5">
+      <div class="filter">Filter</div>
+      <div>
+        <nz-select [(ngModel)]="searchType">
+          <nz-option nzValue="USER" nzLabel="User"></nz-option>
+          <nz-option nzValue="POST" nzLabel="Post"></nz-option>
+        </nz-select>
+      </div>
+      <div *ngIf="searchType == 'POST'">
+        <input
+          [(ngModel)]="contentSearch"
+          nz-input
+          type="text"
+          class="input-search"
+          placeholder="Content"
+        />
+      </div>
+      <div *ngIf="searchType == 'USER'">
+        <input
+          [(ngModel)]="request.name"
+          nz-input
+          type="text"
+          class="input-search"
+          placeholder="Name"
+        />
+      </div>
+
+      <div *ngIf="searchType == 'USER'">
+        <input
+          [(ngModel)]="request.phoneNumber"
+          nz-input
+          type="text"
+          class="input-search"
+          placeholder="Phone number"
+        />
+      </div>
+      <div *ngIf="searchType == 'USER'">
+        <input
+          [(ngModel)]="request.address"
+          nz-input
+          type="text"
+          class="input-search"
+          placeholder="Address"
+        />
+      </div>
+      <div *ngIf="searchType == 'USER'">
+        <nz-select
+          [(ngModel)]="request.gender"
+          nzPlaceHolder="Gender"
+          nzShowSearch
+          nzAllowClear
+        >
+          <nz-option nzValue="MALE" nzLabel="MALE"></nz-option>
+          <nz-option nzValue="FEMALE" nzLabel="FEMALE"></nz-option>
+          <nz-option nzValue="ORTHER" nzLabel="ORTHER"></nz-option>
+        </nz-select>
+      </div>
+      <div>
+        <button
+          (click)="onSearch()"
+          class="button-search"
+          nz-button
+          nzType="primary"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+    <div nz-col nzSpan="2"></div>
+    <div nz-col nzSpan="10">
+      <div *ngIf="searchType == 'USER'">
+        <div *ngFor="let profile of profiles">
+          <!-- <div nz-row class="profiles">
+              <div nz-col nzSpan="5">
+                <img
+                  class="avatar"
+                  [src]="profile.avatarUrl"
+                  alt="avatar"
+                />
+              </div>
+              <div nz-col nzSpan="14">
+                <div nz-row>
+                <div class="name-friend" nz-col nzSpan="20" (click)="onClickProfile(profile)">{{profile.name}}</div>
+              </div>
+            </div>
+            </div> -->
+          <div class="infomation">
+            <app-personal-infomation
+              [profile]="profile"
+              [friend]="profile.friend"
+              [isSearch]="true"
+            ></app-personal-infomation>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="searchType == 'POST'">
+        <div *ngFor="let post of posts">
+          <app-posts
+            [profile]="profile"
+            [post]="post"
+            (postUpdate)="onUpdatePost($event)"
+            (postDelete)="onDeletePost($event)"
+          ></app-posts>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

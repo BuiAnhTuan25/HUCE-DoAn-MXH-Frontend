@@ -13,6 +13,7 @@ export class FriendsComponent implements OnInit {
   user: any = {};
   friend: any = {};
   profileFriend: any = {};
+  profile: any = {};
   listPosts:any[]=[];
   page!:number;
 totalPage!:number;
@@ -29,11 +30,13 @@ errorMessage:string='';
   ngOnInit(): void {
     this.page=0;
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
+    this.dataService.receiveProfile.subscribe((profile)=>(this.profile=profile));
     this.dataService.receiveProfileFriend.subscribe((profileFriend) => {
       this.profileFriend = profileFriend;
       this.getFriend(this.user.id, this.profileFriend.id);
-      this.getListPostByAuthorId(this.profileFriend.id, this.page)
+      this.getPosts(this.profileFriend.id, this.user.id, this.page)
     });
+
   }
 
   getFriend(meId: number, friendId: number) {
@@ -50,8 +53,8 @@ errorMessage:string='';
     );
   }
 
-  getListPostByAuthorId(id: number,page: number) {
-    this.postService.getPostByAuthorId(id, page, 20).subscribe(
+  getPosts(authorId:any, id: number,page: number) {
+    this.postService.getPosts(authorId, id, page, 20).subscribe(
       (res) => {
         if(res.success && res.code == 200){
           this.totalPage = res.pagination.total_page;
@@ -63,8 +66,8 @@ errorMessage:string='';
 
   onScrollDown(){
     this.page=this.page+1;
-    if(this.page<=this.totalPage){
-      this.getListPostByAuthorId(this.profileFriend.id,this.page);
+    if(this.page<=this.totalPage-1){
+      this.getPosts(this.profileFriend.id, this.user.id, this.page);
     } else this.errorMessage = 'No more posts...';
     
   }

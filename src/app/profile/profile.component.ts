@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
     this.dataService.receiveProfile.subscribe(
       (profile) => {
         this.profile = profile;
-        this.getListPostByAuthorId(this.profile.id,this.page);
+        this.getPosts(this.profile.id, this.profile.id, this.page);
       }
     );
   }
@@ -47,8 +47,8 @@ export class ProfileComponent implements OnInit {
   }
 
   
-  getListPostByAuthorId(id:number,page:number){
-    this.postService.getPostByAuthorId(id,this.page,20).subscribe(res=>{
+  getPosts(authorId: number, id:number,page:number){
+    this.postService.getPosts(authorId, id,this.page,20).subscribe(res=>{
       if(res.success && res.code == 200){
         this.totalPage = res.pagination.total_page;
         this.page=page;
@@ -77,8 +77,8 @@ export class ProfileComponent implements OnInit {
   onScrollDown(){
     if(this.selectIndex == 0){
       this.page++;
-      if(this.page<=this.totalPage){
-        this.getListPostByAuthorId(this.user.id,this.page);
+      if(this.page<=this.totalPage-1){
+        this.getPosts(this.user.id, this.user.id, this.page);
       } else this.errorMessage = 'No more posts...';
       
     }
@@ -86,13 +86,13 @@ export class ProfileComponent implements OnInit {
     if(this.selectIndex == 1){
       if(this.appListFriend.selectIndex == 0){
         this.appListFriend.pageFriended++;
-        if(this.appListFriend.pageFriended<=this.appListFriend.totalPageFriended){
+        if(this.appListFriend.pageFriended<=this.appListFriend.totalPageFriended-1){
           this.appListFriend.getListFriend(this.user.id,'FRIENDED',this.appListFriend.pageFriended);
         }
       }
       if(this.appListFriend.selectIndex == 1){
         this.appListFriend.pageFriendConfirm++;
-        if(this.appListFriend.pageFriendConfirm<=this.appListFriend.totalPageFriendConfirm){
+        if(this.appListFriend.pageFriendConfirm<=this.appListFriend.totalPageFriendConfirm-1){
           this.appListFriend.getListFriend(this.user.id,'CONFIRM',this.appListFriend.pageFriendConfirm);
         }
       }

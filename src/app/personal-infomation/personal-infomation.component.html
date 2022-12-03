@@ -9,7 +9,7 @@
   <div nz-col nzSpan="2"></div>
   <div class="infomation" nz-col nzSpan="13">
     <div nz-row>
-      <div nz-col nzSpan="10" id="name">{{ profile?.name }}</div>
+      <div nz-col nzSpan="10" id="name" [ngClass]="isSearch ? 'name-search' : ''" (click)="onClickProfile(profile)">{{ profile?.name }}</div>
       <div nz-col nzSpan="4"></div>
       <div nz-col nzSpan="10">
         <button

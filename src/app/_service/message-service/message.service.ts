@@ -45,6 +45,14 @@ export class MessageService {
     );
   }
 
+  getListMessagesNotSeen(receiverId: any): Observable<any> {
+    return this.http.get(MESSAGE_API + '/not-seen/' + receiverId);
+  }
+
+  getListNotificationNotSeen(receiverId: any): Observable<any> {
+    return this.http.get(MESSAGE_API + '/notification/' + receiverId);
+  }
+
   getListFriendChat(
     idMe: number,
     page: number,
@@ -81,5 +89,9 @@ export class MessageService {
 
   deleteMessage(id: number): Observable<any> {
     return this.http.delete(MESSAGE_API + '/' + id);
+  }
+
+  updateMessageStatus(listId:any[]): Observable<any>{
+    return this.http.put(MESSAGE_API+'/list',listId);
   }
 }

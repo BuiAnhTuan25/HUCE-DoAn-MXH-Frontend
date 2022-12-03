@@ -91,7 +91,7 @@ color:#1890ff;
     padding-top: 5px;
     padding-bottom: 5px;
     max-width:46%;
-    margin-right: 2%;
+    margin-right: 1%;
     margin-left: 2%;
     border-radius: 20px;
     background-color: black;
@@ -110,7 +110,7 @@ color:#1890ff;
     padding-bottom: 5px;
     max-width:46%;
     margin-right: 2%;
-    margin-left: 2%;
+    margin-left: 1%;
     border-radius: 20px;
     border:1px solid #7e7e7e;
     color:#ffffff;
@@ -134,6 +134,11 @@ color:#1890ff;
     float:left;
     margin-top: 4px;
 
+}
+.message-status{
+    float:right;
+    color:black;
+    font-size:18px;
 }
 .online{
 color:#1890ff;

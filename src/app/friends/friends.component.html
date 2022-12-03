@@ -17,7 +17,7 @@
       <nz-tabset class="tabset">
         <nz-tab [nzTitle]="postTitle">
           <div *ngFor="let post of listPosts">
-            <app-posts [profile]="profileFriend" [post]="post"></app-posts>
+            <app-posts [profile]="profile" [post]="post"></app-posts>
           </div>
           <div style="color:#ffffff">{{errorMessage}}</div>
         </nz-tab>

@@ -24,8 +24,8 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
 export class PostsComponent implements OnInit {
   @Output() postUpdate = new EventEmitter<any>();
   @Output() postDelete = new EventEmitter<any>();
-  @Input() profile: any = {};
   @Input() post: any = {};
+  @Input() profile: any = {};
   user: any = {};
   postId: any;
   postSelect: any;
@@ -35,6 +35,7 @@ export class PostsComponent implements OnInit {
   file: any;
   isLoading: boolean = false;
   loading: boolean = false;
+  isShare: boolean = false;
   pictureUrl: String = '';
   listComment: any[] = [];
   commentContent: string = '';
@@ -42,6 +43,7 @@ export class PostsComponent implements OnInit {
   typeContext='';
   isLoadingComment:boolean=false;
   isShowMore=true;
+  titleModal: string = '';
   constructor(
     private postService: PostService,
     private msg: NzMessageService,
@@ -62,6 +64,9 @@ export class PostsComponent implements OnInit {
     if (this.postId) {
       this.getPostById(this.postId);
     }
+    this.initForm();
+  }
+  initForm(){
     this.postForm = this.fb.group({
       id: [''],
       author_id: [this.user.id],
@@ -70,6 +75,7 @@ export class PostsComponent implements OnInit {
       picture_url: [''],
       privacy: [PRIVACY.PUBLIC],
       posting_time: [''],
+      is_share: [false]
     });
   }
 
@@ -82,12 +88,27 @@ export class PostsComponent implements OnInit {
     this.typeContext = 'post';
   }
 
-  openModalEdit() {
+  openModalEdit(isShare: boolean) {
+    this.isShare = isShare;
     this.isVisible = true;
-    this.postForm.patchValue(this.postSelect);
+    if(isShare) {
+      this.titleModal = 'Share post';
+      this.initForm();
+      this.postForm.controls['is_share'].setValue(true);
+      if(this.post.is_share){
+        this.postForm.controls['content'].setValue(this.post.content);
+      } else {
+        this.postForm.controls['content'].setValue('http://localhost:4200/post/'+this.post.id);
+      }
+    } else {
+      this.titleModal = 'Update post';
+      this.postForm.patchValue(this.postSelect);
+    }
+    
   }
   closeModalEdit() {
     this.isVisible = false;
+    this.isLoading = false;
     this.postForm.reset();
   }
 
@@ -99,30 +120,38 @@ export class PostsComponent implements OnInit {
     });
   }
 
-  updatePost() {
+  savePost() {
+    if(this.isShare) {
+      this.share();
+    } else this.update();
+
+  }
+
+  update() {
     this.isLoading = true;
     this.postService
-      .updatePost(
-        this.postForm.value,
-        this.postForm.controls['id'].value,
-        this.file
-      )
-      .subscribe(
-        (res) => {
-          if (res.success && res.code == 200) {
-            this.isLoading = false;
-            this.postUpdate.emit(res.data);
-            this.msg.success('Update post successfully!');
-          } else {
-            this.isLoading = false;
-            this.msg.error(res.message);
-          }
-        },
-        (err) => {
+    .updatePost(
+      this.postForm.value,
+      this.postForm.controls['id'].value,
+      this.file
+    )
+    .subscribe(
+      (res) => {
+        if (res.success && res.code == 200) {
           this.isLoading = false;
-          this.msg.error(err.detail);
+          this.postUpdate.emit(res.data);
+          this.msg.success('Update post successfully!');
+          this.closeModalEdit();
+        } else {
+          this.isLoading = false;
+          this.msg.error(res.message);
         }
-      );
+      },
+      (err) => {
+        this.isLoading = false;
+        this.msg.error(err.detail);
+      }
+    );
   }
 
   deletePost() {
@@ -301,5 +330,23 @@ export class PostsComponent implements OnInit {
 
   onClickReadMore(){
     this.isShowMore=!this.isShowMore;
+  }
+
+  share() {
+    this.isLoading = true;
+    this.postService.createPost(this.postForm.value).subscribe(res=>{
+      if(res.success) {
+        this.isLoading = false;
+        this.msg.success(res.message);
+        this.closeModalEdit();
+      } else {
+        this.isLoading = false;
+        this.msg.error(res.message);
+      }
+    },
+    (err) => {
+      this.isLoading = false;
+      this.msg.error(err.detail);
+    })
   }
 }

@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from '../_service/data-service/data.service';
 import { PostService } from '../_service/post-service/post.service';
-import { ProfileService } from '../_service/profile-service/profile.service';
-
 
 @Component({
   selector: 'app-news-feed',
@@ -65,7 +63,7 @@ errorMessage:string='';
 
   onScrollDown(){
     this.page++;
-    if(this.page<=this.totalPage){
+    if(this.page<=this.totalPage-1){
       this.getNewsFeed(this.user.id,this.page);
     } else this.errorMessage = 'No more posts...';
     

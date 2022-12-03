@@ -9,7 +9,6 @@ import { DataService } from '../_service/data-service/data.service';
 import { FriendService } from '../_service/friend-service/friend.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
 import { TokenStorageService } from '../_service/token-storage-service/token-storage.service';
-import { UserService } from '../_service/user-service/user.service';
 
 @Component({
   selector: 'app-personal-infomation',
@@ -17,59 +16,62 @@ import { UserService } from '../_service/user-service/user.service';
   styleUrls: ['./personal-infomation.component.css'],
 })
 export class PersonalInfomationComponent implements OnInit {
-  @Input() profile: any={};
+  @Input() profile: any;
   @Input() friend: any;
+  @Input() isSearch: boolean = false;
   user: any;
-  isVisibleEdit:boolean=false;
-  editForm!:FormGroup;
-  passwordForm!:FormGroup;
-  file:any;
-  loading:boolean=false;
-  avatarUrl:string='';
-  isLoading:boolean=false;
-  isVisiblePassword:boolean=false;
-  confirmPassword:boolean=false;
+  isVisibleEdit: boolean = false;
+  editForm!: FormGroup;
+  passwordForm!: FormGroup;
+  file: any;
+  loading: boolean = false;
+  avatarUrl: string = '';
+  isLoading: boolean = false;
+  isVisiblePassword: boolean = false;
+  confirmPassword: boolean = false;
   constructor(
     private friendService: FriendService,
     private msg: NzMessageService,
     private profileService: ProfileService,
     private fb: FormBuilder,
     private tokenStorage: TokenStorageService,
-    private auth:AuthenticationService,
+    private auth: AuthenticationService,
     private dataService: DataService
   ) {}
 
-
-
   ngOnInit(): void {
-    this.editForm=this.fb.group({
-        id:['', Validators.required],
-        name: ['', Validators.required],
-        phone_number: ['',[Validators.required,Validators.pattern(PHONE_NUMBER_REGEX)]],
-        birthday: ['', Validators.required],
-        gender: ['', Validators.required],
-        avatar_url: [''],
-        address: [''],
-        is_public: [''],
-  })
-  this.passwordForm=this.fb.group({
-    oldPassword: ['', Validators.required],
-    newPassword: ['', [Validators.required, NoSpace]],
-    confirmPassword: ['', [Validators.required, NoSpace]],
-})
+    this.editForm = this.fb.group({
+      id: ['', Validators.required],
+      name: ['', Validators.required],
+      phone_number: [
+        '',
+        [Validators.required, Validators.pattern(PHONE_NUMBER_REGEX)],
+      ],
+      birthday: ['', Validators.required],
+      gender: ['', Validators.required],
+      avatar_url: [''],
+      address: [''],
+      is_public: [''],
+    });
+    this.passwordForm = this.fb.group({
+      oldPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, NoSpace]],
+      confirmPassword: ['', [Validators.required, NoSpace]],
+    });
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
   }
 
-
-
   getProfile(id: number) {
-    this.profileService.getProfile(id).subscribe((res) => {
-      if (res.success && res.code == 200) {
-        this.profile = res.data;
-      } else this.msg.error(res.message);
-    },err =>{
-      this.msg.error(err);
-    });
+    this.profileService.getProfile(id).subscribe(
+      (res) => {
+        if (res.success && res.code == 200) {
+          this.profile = res.data;
+        } else this.msg.error(res.message);
+      },
+      (err) => {
+        this.msg.error(err);
+      }
+    );
   }
 
   createFriend() {
@@ -77,38 +79,45 @@ export class PersonalInfomationComponent implements OnInit {
       me_id: this.user.id,
       friend_id: this.profile.id,
     };
-    this.friendService.createFriend(friend).subscribe((res) => {
-      if (res.success && res.code == 200) {
-        this.friend = res.data;
-      } else this.msg.error(res.message);
-    },err =>{
-      this.msg.error(err);
-    });
+    this.friendService.createFriend(friend).subscribe(
+      (res) => {
+        if (res.success && res.code == 200) {
+          this.friend = res.data;
+        } else this.msg.error(res.message);
+      },
+      (err) => {
+        this.msg.error(err);
+      }
+    );
   }
 
   confirmFriend() {
     this.friend.friend_status = 'FRIENDED';
-    this.friendService
-      .updateFriend(this.friend, this.friend.id)
-      .subscribe((res) => {
+    this.friendService.updateFriend(this.friend, this.friend.id).subscribe(
+      (res) => {
         if (res.success && res.code == 200) {
           this.friend = res.data;
           this.msg.success('Add friend successfully!');
         } else this.msg.error(res.message);
-      },err =>{
+      },
+      (err) => {
         this.msg.error(err);
-      });
+      }
+    );
   }
 
   deleteFriend() {
-    this.friendService.deleteFriend(this.friend.id).subscribe((res) => {
-      if (res.success && res.code == 200) {
-        this.friend = null;
-        this.msg.success('Delete friend successfully!');
-      } else this.msg.error(res.message);
-    },err =>{
-      this.msg.error(err);
-    });
+    this.friendService.deleteFriend(this.friend.id).subscribe(
+      (res) => {
+        if (res.success && res.code == 200) {
+          this.friend = null;
+          this.msg.success('Delete friend successfully!');
+        } else this.msg.error(res.message);
+      },
+      (err) => {
+        this.msg.error(err);
+      }
+    );
   }
 
   beforeUpload = (
@@ -159,7 +168,7 @@ export class PersonalInfomationComponent implements OnInit {
     }
   }
 
-  onSaveInfomation(){
+  onSaveInfomation() {
     for (const i in this.editForm.controls) {
       this.editForm.controls[i].markAsDirty();
       this.editForm.controls[i].updateValueAndValidity();
@@ -167,46 +176,55 @@ export class PersonalInfomationComponent implements OnInit {
     if (this.editForm.valid) {
       this.isLoading = true;
 
-    this.profileService.updateProfile(this.editForm.value,this.editForm.controls['id'].value,this.file).subscribe((res)=>{
-      if(res.success && res.code == 200){
-        this.isLoading=false;
-        this.profile=res.data;
-        this.isVisibleEdit=false;
-        this.msg.success('Update personal information successfully!');
-      } else {
-        this.isLoading=false;
-        this.msg.error(res.message)
-      }
-    },err => {
-      this.isLoading=false;
-      this.msg.error(err);
-    });
+      this.profileService
+        .updateProfile(
+          this.editForm.value,
+          this.editForm.controls['id'].value,
+          this.file
+        )
+        .subscribe(
+          (res) => {
+            if (res.success && res.code == 200) {
+              this.isLoading = false;
+              this.profile = res.data;
+              this.isVisibleEdit = false;
+              this.msg.success('Update personal information successfully!');
+            } else {
+              this.isLoading = false;
+              this.msg.error(res.message);
+            }
+          },
+          (err) => {
+            this.isLoading = false;
+            this.msg.error(err);
+          }
+        );
+    }
   }
-}
 
-  openModalEdit(){
-    this.isVisibleEdit=true;
+  openModalEdit() {
+    this.isVisibleEdit = true;
     this.editForm.patchValue(this.profile);
-    this.avatarUrl=this.profile.avatar_url;
+    this.avatarUrl = this.profile.avatar_url;
   }
 
-  handleCancelEdit(){
+  handleCancelEdit() {
     this.isVisibleEdit = false;
     this.editForm.reset();
-    this.avatarUrl='';
+    this.avatarUrl = '';
   }
 
-  openChangePassword(){
-    this.isVisiblePassword=true;
+  openChangePassword() {
+    this.isVisiblePassword = true;
     this.passwordForm.reset();
   }
 
-  closePassword(){
-    this.isVisiblePassword=false;
+  closePassword() {
+    this.isVisiblePassword = false;
     this.passwordForm.reset();
   }
 
-  onSavePassword(){
+  onSavePassword() {
     for (const i in this.passwordForm.controls) {
       this.passwordForm.controls[i].markAsDirty();
       this.passwordForm.controls[i].updateValueAndValidity();
@@ -217,27 +235,30 @@ export class PersonalInfomationComponent implements OnInit {
     if (this.passwordForm.valid && this.confirmPassword) {
       this.isLoading = true;
       const password = {
-        old_password:this.passwordForm.controls['oldPassword'].value,
-        new_password:this.passwordForm.controls['newPassword'].value,
-      }
-      this.auth.changePassword(this.user.id,password).subscribe((res)=>{
-        if(res.success && res.code == 200){
-          this.isLoading=false;
-          this.tokenStorage.saveUser(res.data);
-          this.user=res.data;
-          this.isVisiblePassword=false;
-          this.auth.doLogout();
-          this.msg.success('Change password successfully!');
-        } else {
-          this.isLoading=false;
-          this.msg.error(res.message);
-        }
-      },err => {
-        this.isLoading=false;
+        old_password: this.passwordForm.controls['oldPassword'].value,
+        new_password: this.passwordForm.controls['newPassword'].value,
+      };
+      this.auth.changePassword(this.user.id, password).subscribe(
+        (res) => {
+          if (res.success && res.code == 200) {
+            this.isLoading = false;
+            this.tokenStorage.saveUser(res.data);
+            this.user = res.data;
+            this.isVisiblePassword = false;
+            this.auth.doLogout();
+            this.msg.success('Change password successfully!');
+          } else {
+            this.isLoading = false;
+            this.msg.error(res.message);
+          }
+        },
+        (err) => {
+          this.isLoading = false;
           this.msg.error(err);
-      });
+        }
+      );
+    }
   }
-}
 
   checkConfirmPassword() {
     if (
@@ -249,26 +270,34 @@ export class PersonalInfomationComponent implements OnInit {
       });
       this.confirmPassword = false;
     } else this.confirmPassword = true;
- 
   }
 
-  checkPhoneNumber(){
-    this.profileService.findByPhoneNumber(this.editForm.controls['phone_number'].value).subscribe((res:any)=>{
-      if(res.success && res.code == 200){
-        this.editForm.controls['phone_number'].setErrors({
-          phoneNumberExist:true
-        })
-      }
-    })
+  checkPhoneNumber() {
+    this.profileService
+      .findByPhoneNumber(this.editForm.controls['phone_number'].value)
+      .subscribe((res: any) => {
+        if (res.success && res.code == 200) {
+          this.editForm.controls['phone_number'].setErrors({
+            phoneNumberExist: true,
+          });
+        }
+      });
   }
 
-  onClickChat(){
-    const chatWith={
-      "id":this.profile.id,
-      "name":this.profile.name,
-      "avatar_url":this.profile.avatar_url
-    }
+  onClickChat() {
+    const chatWith = {
+      id: this.profile.id,
+      name: this.profile.name,
+      avatar_url: this.profile.avatar_url,
+      active_status: this.profile.active_status,
+    };
     this.dataService.sendIndexView(2);
     this.dataService.sendChatWith(chatWith);
+  }
+
+  onClickProfile(profile: any) {
+    if(this.isSearch) {
+      this.dataService.sendProfileFriend(profile);
+    }
   }
 }

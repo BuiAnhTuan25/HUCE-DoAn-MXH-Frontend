@@ -13,9 +13,14 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
 })
 export class ChatComponent implements OnInit,OnDestroy {
   listMessages: any[] = [];
+  listMessagesNotSeen: any[] = [];
+  listMessageWebsocket:any[]=[];
+  indexView:any;
   chatWith: any;
   user: any;
   profile:any={};
+  page!:number;
+  totalPage!:number;
 
   constructor(
     private router: Router,
@@ -28,14 +33,35 @@ export class ChatComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
+    this.page=0;
+    this.getListMessagesNotSeen(this.user.id);
     this.dataService.receiveProfile.subscribe((profile)=>(this.profile=profile));
     this.dataService.receiveChatWith.subscribe(chatWith=>{
       this.chatWith = chatWith;
-      this.getListMessage(this.user.id, this.chatWith.id);
+      this.page=0;
+      this.getListMessage(this.user.id, this.chatWith.id, this.page);
+      this.updateMessageStatus(this.chatWith);
+      this.websocket.messageCount = this.websocket.messageCount.filter(m=>{
+        return m.sender_id != chatWith.id;
+      })
     })
-    this.dataService.receiveIndexView.subscribe(i=>{
-      if(i==2){
-        this.chatWith = null;
+    this.dataService.receiveIndexView.subscribe(index=>{
+      this.indexView = index;
+      if(this.indexView == 2 && this.listMessageWebsocket.length > 0){
+        this.messageChatting(this.listMessageWebsocket);
+        this.websocket.messageCount = this.websocket.messageCount.filter(m=>{
+          return m.sender_id != this.chatWith.id;
+        })
+      }
+    })
+    this.dataService.receiveMessageChatting.subscribe(messageChatting=>{
+      if(this.chatWith.id == messageChatting.sender_id && this.indexView == 2){
+        this.messageChatting([messageChatting.id]);
+        this.websocket.messageCount = this.websocket.messageCount.filter(m=>{
+          return m.id != messageChatting.id;
+        })
+      } else if(this.chatWith.id == messageChatting.sender_id && this.indexView != 2){
+        this.listMessageWebsocket.push(messageChatting.id);
       }
     })
   }
@@ -44,17 +70,32 @@ export class ChatComponent implements OnInit,OnDestroy {
     this.websocket._disconnect();
   }
 
-  getListMessage(sender: number, receiver: number) {
+  getListMessage(sender: number, receiver: number, page:number) {
     this.messageService
-      .getListMessagesFriend(sender, receiver, 0, 40)
+      .getListMessagesFriend(sender, receiver, page, 40)
       .subscribe((res) => {
         if (res.success && res.code == 200) {
-          this.listMessages = res.data;
-          this.messageFilter();
+          this.page=page;
+          this.totalPage = res.pagination.total_page;
+          if(this.page == 0){
+            this.listMessages = res.data.reverse();
+            this.messageFilter();
+          } else {
+            this.listMessages = [...res.data.reverse(),...this.listMessages];
+          }
+          
         } else this.msg.error(res.message);
       },err =>{
         this.msg.error(err);
       });
+  }
+
+  getListMessagesNotSeen(receiverId:number){
+    this.messageService.getListMessagesNotSeen(receiverId).subscribe(res=>{
+      if(res.success && res.code == 200){
+        this.listMessagesNotSeen = res.data;
+      } else this.msg.error(res.message);
+    })
   }
 
   messageFilter() {
@@ -77,5 +118,51 @@ export class ChatComponent implements OnInit,OnDestroy {
   logout(){
     this.authService.doLogout();
     this.websocket._disconnect();
+  }
+
+  onScrollUpMessage(){
+    this.page++;
+    if(this.page<=this.totalPage-1){
+      this.getListMessage(this.user.id, this.chatWith.id, this.page);
+    }
+  }
+
+  receiverListMessage(ev:any){
+    this.listMessagesNotSeen = ev;
+  }
+
+  updateMessageStatus(chatWith:any){
+    let listId = this.getIdMessageNotSeen(chatWith);
+    if(listId.length>0){
+      this.messageService.updateMessageStatus(listId).subscribe(res=>{
+        if(res.success && res.code == 200){
+        } else {
+          this.msg.error(res.message);
+        }
+      });
+    }
+  }
+
+  getIdMessageNotSeen(friendChat:any):any{
+    let listId:any[]=[];
+    let newListMessage:any[]=[];
+    this.listMessagesNotSeen.forEach(m=>{
+      if(m.sender_id == friendChat.id){
+        listId.push(m.id);
+      } else newListMessage.push(m);
+    })
+    this.listMessagesNotSeen = newListMessage;
+    return listId;
+  }
+
+  messageChatting(listMessage:any[]){
+    if(listMessage.length>0){
+      this.messageService.updateMessageStatus(listMessage).subscribe(res=>{
+        if(res.success && res.code == 200){
+        } else {
+          this.msg.error(res.message);
+        }
+      });
+    }
   }
 }

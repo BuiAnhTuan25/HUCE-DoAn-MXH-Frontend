@@ -2,23 +2,42 @@
   <div class="chat-with">
     <div class="friend" nz-row>
       <div nz-col nzSpan="3">
-        <img
-          class="avatar"
-          [src]="chatWith.avatar_url"
-          alt="avatar"
-        />
+        <img class="avatar" [src]="chatWith.avatar_url" alt="avatar" />
       </div>
       <div class="name-friend" nz-col nzSpan="18">
-        <div>{{chatWith.name}}</div>
-        <div *ngIf="chatWith.active_status == 'OFFLINE'" class="offline" nz-col nzSpan="18">Offline</div>
-        <div *ngIf="chatWith.active_status == 'ONLINE'" class="online" nz-col nzSpan="18">Online</div>
+        <div>{{ chatWith.name }}</div>
+        <div
+          *ngIf="chatWith.active_status == 'OFFLINE'"
+          class="offline"
+          nz-col
+          nzSpan="18"
+        >
+          Offline
+        </div>
+        <div
+          *ngIf="chatWith.active_status == 'ONLINE'"
+          class="online"
+          nz-col
+          nzSpan="18"
+        >
+          Online
+        </div>
       </div>
     </div>
   </div>
   <div class="content">
-    <div class="overflow-y" #content>
+    <div
+      class="overflow-y"
+      infinite-scroll
+      [scrollWindow]="false"
+      [infiniteScrollDistance]="scrollDistance"
+      [infiniteScrollUpDistance]="scrollUpDistance"
+      [infiniteScrollThrottle]="throttle"
+      (scrolledUp)="onScrollUp()"
+      #scrollMe [scrollTop]="scrollMe.scrollHeight"
+    >
       <ul id="my-ul-element">
-        <div #messages *ngFor="let message of listMessages">
+        <div  *ngFor="let message of listMessages;index as i">
           <li class="clearfix" *ngIf="message.sender_id == chatWith.id">
             <div>
               <img
@@ -51,6 +70,8 @@
               >
                 {{ message.content }}
               </div>
+              <!-- <i *ngIf="i==listMessages.length-1 && message.message_status == 'SEEN'" class="fa-solid fa-circle-check message-status"></i>
+              <i *ngIf="i==listMessages.length-1 && message.message_status == 'NOT_SEEN'" class="fa-regular fa-circle-check message-status"></i> -->
             </div>
           </li>
         </div>
@@ -72,7 +93,12 @@
               </div>
             </div>
           </li>
-          <li class="clearfix" *ngIf="message.sender_id == user.id && message.receiver_id == chatWith.id">
+          <li
+            class="clearfix"
+            *ngIf="
+              message.sender_id == user.id && message.receiver_id == chatWith.id
+            "
+          >
             <div>
               <img
                 class="avatar-message-send"
@@ -97,10 +123,19 @@
     <div nz-row style="padding-top: 2%">
       <div nz-col nzSpan="1"></div>
       <div nz-col nzSpan="20">
-        <input nz-input [(ngModel)]="contentMessage" type="text" (keyup.enter)="sendMessage()" placeholder="Type messages" />
+        <input
+          nz-input
+          [(ngModel)]="contentMessage"
+          type="text"
+          (keyup.enter)="sendMessage()"
+          placeholder="Type messages"
+        />
       </div>
       <div nz-col nzSpan="3" class="icon">
-        <i (click)="sendMessage()" class="fa-solid fa-paper-plane icon-send"></i>
+        <i
+          (click)="sendMessage()"
+          class="fa-solid fa-paper-plane icon-send"
+        ></i>
       </div>
     </div>
   </div>

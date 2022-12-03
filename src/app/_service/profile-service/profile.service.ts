@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ProfileSearchRequest } from 'src/app/_model/profile-search-request';
 
 const PROFILE_API = 'http://localhost:8080/api/v1/profiles';
 
@@ -13,6 +14,29 @@ export class ProfileService {
 
   getProfile(id: number): Observable<any> {
     return this.http.get(PROFILE_API + '/' + id);
+  }
+
+  search(request: ProfileSearchRequest, page: number, pageSize: number): Observable<any> {
+    let param = new HttpParams();
+    param = param.append('page', page);
+    param = param.append('page-size', pageSize);
+    if(request.idMe) {
+      param = param.append('id-me', request.idMe);
+    }
+    if(request.name) {
+      param = param.append('name', request.name);
+    }
+    if(request.phoneNumber) {
+      param = param.append('phone-number', request.phoneNumber);
+    }
+    if(request.address) {
+      param = param.append('address', request.address);
+    }
+    if(request.gender) {
+      param = param.append('gender', request.gender);
+    }
+
+    return this.http.get(PROFILE_API + '/search', { params: param });
   }
 
   findByPhoneNumber(phoneNumber: string): Observable<any> {

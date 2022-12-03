@@ -11,6 +11,9 @@ export class DataService {
   private indexView: Subject<any> = new Subject<any>();
   private firstChat: Subject<any> = new Subject<any>();
   private activeStatusFriend: Subject<any> = new Subject<any>();
+  private senderId: Subject<any> = new Subject<any>();
+  private messageChatting: Subject<any> = new Subject<any>();
+  public friendChat:any;
   
   constructor() {}
 
@@ -20,6 +23,23 @@ export class DataService {
 
   public sendChatWith(chatWith: any) {
     this.chatWith.next(chatWith);
+    this.friendChat = chatWith;
+  }
+
+  public get receiveSenderId() {
+    return this.senderId;
+  }
+
+  public sendSenderId(senderId: any) {
+    this.senderId.next(senderId);
+  }
+
+  public get receiveMessageChatting() {
+    return this.messageChatting;
+  }
+
+  public sendMessageChatting(messageChatting: any) {
+    this.messageChatting.next(messageChatting);
   }
 
   public get receiveProfile() {
