@@ -1,16 +1,13 @@
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
+  EventEmitter,
   Input,
   OnInit,
-  QueryList,
+  Output,
   ViewChild,
-  ViewChildren,
 } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import { ScrollToBottomDirective } from '../_helpers/scroll-to-bottom.derective';
 import { DataService } from '../_service/data-service/data.service';
-import { MessageService } from '../_service/message-service/message.service';
 import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
 @Component({
@@ -18,39 +15,35 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
   templateUrl: './chat-content.component.html',
   styleUrls: ['./chat-content.component.css'],
 })
-export class ChatContentComponent implements OnInit, AfterViewInit {
+export class ChatContentComponent implements OnInit{
+  @ViewChild(ScrollToBottomDirective)
+  scroll!: ScrollToBottomDirective;
   @Input() chatWith: any;
   @Input() listMessages: any[] = [];
-  @ViewChildren('messages') messages!: QueryList<any>;
-  @ViewChild('content') content!: ElementRef;
+  @Input() profile: any = {};
+  @Output() scrollUp = new EventEmitter<any>();
+
   user: any;
+  indexView!:number;
   contentMessage: string = '';
-  profile: any = {};
+  throttle = 300;
+  scrollUpDistance = 1;
+  scrollDistance = 1;
 
   constructor(
-    private msg: NzMessageService,
-    private messageService: MessageService,
     private dataService: DataService,
     public websocket: WebsocketService
   ) {}
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('auth-user')!);
-    this.profile = JSON.parse(localStorage.getItem('profile-user')!);
-    this.messageFilter(this.chatWith.id);
-  }
+    this.dataService.receiveActiveStatusFriend.subscribe((msg) => {
+        if (this.chatWith.id == msg.sender_id) {
+          this.chatWith.active_status = msg.content;
+        }
+    });
 
-  ngAfterViewInit() {
-    this.scrollToBottom();
-    this.messages.changes.subscribe(this.scrollToBottom);
   }
-
-  scrollToBottom = () => {
-    try {
-      this.content.nativeElement.scrollTop =
-        this.content.nativeElement.scrollHeight;
-    } catch (err) {}
-  };
 
   sendMessage() {
     if (this.contentMessage != '') {
@@ -59,16 +52,16 @@ export class ChatContentComponent implements OnInit, AfterViewInit {
         receiver_id: this.chatWith.id,
         content: this.contentMessage,
         message_type: 'MESSAGE',
+        avatar_url:this.profile.avatar_url,
       };
       this.websocket._send(message);
       this.contentMessage = '';
+      this.dataService.sendFirstChat(this.chatWith)
     }
   }
-  messageFilter(id: number) {
-    this.websocket.receiverMessage = this.websocket.receiverMessage.filter(
-      (msg) => {
-        msg.receiver_id = id;
-      }
-    );
+
+  onScrollUp(){
+    this.scrollUp.emit();
   }
+
 }

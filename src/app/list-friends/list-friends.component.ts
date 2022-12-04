@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { DataService } from '../_service/data-service/data.service';
 import { FriendService } from '../_service/friend-service/friend.service';
@@ -16,6 +15,14 @@ export class ListFriendsComponent implements OnInit {
   listFriended: any[] = [];
   listFriendConfirm: any[] = [];
   selectFriend:any;
+  pageFriended!:number;
+  pageFriendConfirm!:number;
+  totalPageFriended!:number;
+  totalPageFriendConfirm!:number;
+  friendedStatus:string='FRIENDED';
+  friendConfirmStatus:string='CONFIRM';
+  selectIndex:number=0;
+  totalConfirm!:number;
   constructor(
     private dataService: DataService,
     private friendService: FriendService,
@@ -24,9 +31,12 @@ export class ListFriendsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.pageFriended=0;
+    this.pageFriendConfirm=0;
     this.dataService.receiveProfile.subscribe((profile) => {
       this.profile = profile;
-      this.getListFriend(this.profile.id);
+      this.getListFriend(this.profile.id,this.friendedStatus,this.pageFriended);
+      this.getListFriend(this.profile.id,this.friendConfirmStatus,this.pageFriendConfirm);
     });
   }
 
@@ -34,16 +44,26 @@ export class ListFriendsComponent implements OnInit {
     this.selectFriend = data;
   }
 
-  getListFriend(id: number) {
-    this.friendService.getListFriend(id, 0, 9999).subscribe((res) => {
+  getListFriend(id: number,friendStatus:string,page:number) {
+    this.friendService.getListFriend(id, friendStatus, page, 50).subscribe((res) => {
       if (res.success && res.code == 200) {
-        this.friends = res.data;
-        this.listFriended = this.friends.filter(
-          (friend) => friend.friend_status == 'FRIENDED'
-        );
-        this.listFriendConfirm = this.friends.filter(
-          (friend) => friend.friend_status == 'CONFIRM'
-        );
+        
+        // this.friends = res.data;
+        if(friendStatus == this.friendedStatus){
+          this.totalPageFriended = res.pagination.total_page;
+          this.pageFriended=page;
+          if(page == 0){
+            this.listFriended = res.data;
+          } else this.listFriended = [...this.listFriended,...res.data];
+        }
+        if(friendStatus == this.friendConfirmStatus){
+          this.totalPageFriendConfirm = res.pagination.total_page;
+          this.totalConfirm = res.pagination.total;
+          this.pageFriendConfirm=page;
+          if(page == 0){
+            this.listFriendConfirm = res.data;
+          } else this.listFriendConfirm = [...this.listFriendConfirm,...res.data];
+        }
       } else this.msg.error(res.message);
     });
   }

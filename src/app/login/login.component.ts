@@ -66,7 +66,6 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       this.auth.login(this.validateForm.value).subscribe(
         (data) => {
-          console.log(data)
           if(data.success && data.data){
             this.isLoading = false;
             this.tokenStorage.saveToken(data.data.jwt);
@@ -184,6 +183,7 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+
   signOut(): void {
     this.socialAuthService.signOut();
   }

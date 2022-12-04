@@ -1,15 +1,17 @@
 <div id="main">
   <div nz-row>
     <div nz-col nzSpan="6">
-      <app-list-chat (sendChatWith)="receiverChatWith($event)"></app-list-chat>
+      <app-list-chat (emitMessage)="receiverListMessage($event)" [messagesNotSeen]="listMessagesNotSeen"></app-list-chat>
     </div>
     <div nz-col nzSpan="12">
       <app-chat-content
         *ngIf="chatWith"
         [chatWith]="chatWith"
+        [profile]="profile"
         [listMessages]="listMessages"
+        (scrollUp)="onScrollUpMessage()"
       ></app-chat-content>
     </div>
-    <div nz-col nzSpan="6"><app-list-user-group></app-list-user-group></div>
+    <div nz-col nzSpan="6"></div>
   </div>
 </div>

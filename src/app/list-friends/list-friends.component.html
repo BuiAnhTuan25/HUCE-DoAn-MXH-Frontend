@@ -1,5 +1,5 @@
  <div class="friended">
- <nz-tabset class="tabset">
+ <nz-tabset class="tabset" [(nzSelectedIndex)]="selectIndex">
     <nz-tab [nzTitle]="friendedTitle">
         <div nz-row>
             <div nz-col nzSpan="12" *ngFor="let friend of listFriended; index as i">
@@ -51,11 +51,12 @@
     <div class="title">Friends</div>
   </ng-template>
   <ng-template #confirmTitle>
-    <nz-badge [nzCount]="listFriendConfirm.length">
+    <nz-badge [nzOffset]="[20, 0]" nzSize="small" [nzCount]="totalConfirm">
     <div class="title" >Friends request</div>
   </nz-badge>
   </ng-template>
 </div>
+
 
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu *ngIf="selectFriend">

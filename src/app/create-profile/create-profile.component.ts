@@ -3,12 +3,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { forkJoin, Observable, Observer } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { PHONE_NUMBER_REGEX } from '../_helpers/validator';
 import { GENDER } from '../_model/gender';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
-import { FriendService } from '../_service/friend-service/friend.service';
 import { ProfileService } from '../_service/profile-service/profile.service';
+import { TokenStorageService } from '../_service/token-storage-service/token-storage.service';
 import { UserService } from '../_service/user-service/user.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class CreateProfileComponent implements OnInit {
     private router: Router,
     private msg: NzMessageService,
     private auth:AuthenticationService,
-    private friendService: FriendService,
+    private tokenStorage: TokenStorageService
   ) {}
 
   ngOnInit(): void {
@@ -98,7 +98,7 @@ export class CreateProfileComponent implements OnInit {
   updateUser(user:any){
     user.is_profile=true;
     this.userService.updateUser(user,user.id).subscribe((res:any)=>{
-      localStorage.setItem('auth-user',res.data);
+      this.tokenStorage.saveUser(res.data);
     })
   }
 

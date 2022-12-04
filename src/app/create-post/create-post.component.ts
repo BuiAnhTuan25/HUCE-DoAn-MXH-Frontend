@@ -35,12 +35,13 @@ export class CreatePostComponent implements OnInit {
       count_likes: [0],
       picture_url: [''],
       privacy: [PRIVACY.PUBLIC],
-      posting_time: ['']
+      posting_time: [''],
+      is_share: [false]
     });
   }
 
-  getPostByAuthorId(id: number) {
-    this.postService.getPostByAuthorId(id, 0, 9999).subscribe(
+  getPosts(authorId:number, id: number) {
+    this.postService.getPosts(authorId, id, 0, 20).subscribe(
       (res) => {
         if (res.success && res.code == 200) {
           this.listPosts = res.data;

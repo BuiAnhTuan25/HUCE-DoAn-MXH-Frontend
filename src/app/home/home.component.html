@@ -16,17 +16,19 @@
     <nz-affix [nzOffsetTop]="0">
       <div id="nav">
         <div id="nav1">
-          <div style="padding-top: 5px;">
+          <div style="padding-top: 5px">
             <img
               src="https://res.cloudinary.com/anhtuanbui/image/upload/v1664100099/ontfnn5207ahpszqsjkq.png"
               alt="logo"
             />
-            
           </div>
-          <input class="input-search" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" nz-input [(ngModel)]="searchContent" type="text" (keyup)="onSearch()" placeholder="Search by phone number" />
           <div></div>
-
-
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
           <div>
             <i
               (click)="onClickNewssFeed()"
@@ -37,7 +39,6 @@
               "
             ></i>
           </div>
-          <div></div>
           <div></div>
           <div></div>
           <div>
@@ -52,16 +53,56 @@
           </div>
           <div></div>
           <div></div>
+          <div>
+            <nz-badge
+              nzSize="small"
+              [nzOffset]="[7, 10]"
+              style="color: #606770"
+              [nzCount]="
+                appChat.listMessagesNotSeen.length +
+                websocket.messageCount.length
+              "
+            >
+              <i
+                (click)="onClickChat()"
+                [ngClass]="
+                  selectIndex == 2
+                    ? 'fa-brands fa-facebook-messenger icon icon-select'
+                    : 'fa-brands fa-facebook-messenger icon'
+                "
+              ></i>
+            </nz-badge>
+          </div>
+          <div></div>
+          <div></div>
+          <i
+            (click)="onClickSearch()"
+            [ngClass]="
+              selectIndex == 4
+                ? 'fa-solid fa-magnifying-glass icon icon-select'
+                : 'fa-solid fa-magnifying-glass icon'
+            "
+          ></i>
+          <div></div>
           <div></div>
           <div>
-            <i
-              (click)="onClickChat()"
-              [ngClass]="
-                selectIndex == 2
-                  ? 'fa-brands fa-facebook-messenger icon icon-select'
-                  : 'fa-brands fa-facebook-messenger icon'
+            <nz-badge
+              nzSize="small"
+              [nzOffset]="[7, 10]"
+              style="color: #606770"
+              [nzCount]="
+                notificationNotSeen.length +
+                websocket.receiverNotification.length
               "
-            ></i>
+            >
+              <i
+                nz-dropdown
+                nzTrigger="click"
+                [nzDropdownMenu]="notification"
+                (click)="onClickNotification()"
+                class="fa-solid fa-bell icon"
+              ></i>
+            </nz-badge>
           </div>
           <div></div>
           <div></div>
@@ -69,8 +110,9 @@
           <div></div>
           <div></div>
           <div></div>
-          <div style="color: #1890ff;padding-top: 5px;">
-            <a  (click)="logout()">Logout</a>
+          <div></div>
+          <div style="color: #1890ff; padding-top: 5px">
+            <a (click)="logout()">Logout</a>
           </div>
         </div>
       </div>
@@ -80,23 +122,37 @@
         <nz-tabset [(nzSelectedIndex)]="selectIndex">
           <nz-tab><app-news-feed></app-news-feed></nz-tab>
           <nz-tab><app-profile></app-profile></nz-tab>
-          <nz-tab><app-chat></app-chat></nz-tab>
+          <nz-tab><app-chat #appChat></app-chat></nz-tab>
           <nz-tab><app-friends></app-friends></nz-tab>
+          <nz-tab><app-search></app-search></nz-tab>
         </nz-tabset>
       </div>
     </div>
-    <nz-dropdown-menu #menu="nzDropdownMenu">
-      <ul nz-menu *ngIf="searchContent">
-        <li *ngIf="profileSearch" nz-menu-item (click)="onClickFriend()">
-          <img
-            class="avatar"
-            [src]="profileSearch.avatar_url"
-            alt="avatar"
-            />
-            <div class="name-friend">{{profileSearch.name}}</div>
-           
+    
+    <nz-dropdown-menu #notification="nzDropdownMenu">
+      <ul
+        nz-menu
+        class="overflow-y dropdown"
+      >
+        <li *ngIf="notifications.length <= 0" style="color:#a5a5a5">
+          You don't have any notifications
         </li>
-        <li *ngIf="!profileSearch" nz-menu-item nzDisabled>No friends found</li>
+        <div *ngFor="let noti of notifications">
+          <li
+            nz-menu-item
+            (click)="clickNotification(noti)"
+          >
+            <div>
+              {{ noti.content }}
+              <div>
+                {{ noti.sendTime | date: "short" }}
+              </div>
+              <div>
+                {{ noti.send_time | date: "short" }}
+              </div>
+            </div>
+          </li>
+        </div>
       </ul>
     </nz-dropdown-menu>
   </body>

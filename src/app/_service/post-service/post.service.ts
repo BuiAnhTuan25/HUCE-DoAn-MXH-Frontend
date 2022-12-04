@@ -1,8 +1,9 @@
+import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const POST_API = 'http://localhost:8080/api/v1.0/posts';
+const POST_API = 'http://localhost:8080/api/v1/posts';
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +11,33 @@ const POST_API = 'http://localhost:8080/api/v1.0/posts';
 export class PostService {
   constructor(private http: HttpClient) {}
 
-  getPost(id: number): Observable<any> {
-    return this.http.get(POST_API + '/' + id);
+  getPost(id: number, idMe: number): Observable<any> {
+    return this.http.get(POST_API + '/' + idMe +'/'+ id);
   }
 
-  getPostByAuthorId(
+  search(
+    id: number,
+    content: string,
+    page: number,
+    pageSize: number
+  ): Observable<any> {
+    return this.http.get(
+      POST_API +
+        '/search' +
+        '?page=' +
+        page +
+        '&page-size=' +
+        pageSize +
+        '&id=' +
+        id +
+        '&content=' +
+        content
+    );
+  }
+
+  getPosts(
     authorId: number,
+    id: number,
     page: number,
     pageSize: number
   ): Observable<any> {
@@ -23,6 +45,7 @@ export class PostService {
       POST_API +
         '/author-id/' +
         authorId +
+        '/' + id +
         '?page=' +
         page +
         '&page-size=' +
@@ -55,6 +78,7 @@ export class PostService {
     formdata.append('countLikes', post.count_likes);
     formdata.append('pictureUrl', post.picture_url);
     formdata.append('privacy', post.privacy);
+    formdata.append('isShare', post.is_share);
     formdata.append('postingTime', post.posting_time);
 
 
@@ -70,6 +94,7 @@ export class PostService {
     formdata.append('countLikes', post.count_likes);
     formdata.append('pictureUrl', post.picture_url);
     formdata.append('privacy', post.privacy);
+    formdata.append('isShare', post.is_share);
     formdata.append('postingTime', post.posting_time);
 
     return this.http.put(POST_API + '/' + id, formdata);

@@ -9,7 +9,7 @@
   <div nz-col nzSpan="2"></div>
   <div class="infomation" nz-col nzSpan="13">
     <div nz-row>
-      <div nz-col nzSpan="10" id="name">{{ profile?.name }}</div>
+      <div nz-col nzSpan="10" id="name" [ngClass]="isSearch ? 'name-search' : ''" (click)="onClickProfile(profile)">{{ profile?.name }}</div>
       <div nz-col nzSpan="4"></div>
       <div nz-col nzSpan="10">
         <button
@@ -43,7 +43,7 @@
       <button nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" *ngIf="profile?.id != user.id && friend?.friend_status == 'WAITING'" nz-button class="button-add" nzType="default">
         <i class="fa-solid fa-user-plus icon"></i>waiting
       </button>
-      <button *ngIf="profile?.id != user.id" nz-button class="button-add" nzType="primary">
+      <button (click)="onClickChat()" *ngIf="profile?.id != user.id" nz-button class="button-add" nzType="primary">
         <i class="fa-brands fa-facebook-messenger icon"></i>Chat
       </button>
     </div>
@@ -63,7 +63,7 @@
         <nz-upload
         style="width:150px"
           class="avatar-uploader"
-          nzAction="http://localhost:8080/api/v1.0/upload"
+          nzAction="http://localhost:8080/api/v1/upload"
           nzName="avatar"
           nzListType="picture-card"
           [nzShowUploadList]="false"

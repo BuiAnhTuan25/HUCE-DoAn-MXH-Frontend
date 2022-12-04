@@ -1,7 +1,28 @@
 <div id="main">
-  <div class="overflow-y">
+  <div
+    class="overflow-y"
+    infinite-scroll
+    [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollThrottle]="throttle"
+    [scrollWindow]="false"
+    (scrolled)="onScrollDown()"
+  >
     <div class="post">
-      <app-posts [profile]="profile" [listPosts]="listPosts"></app-posts>
+      <app-create-post
+        *ngIf="profile.id == user.id"
+        (post)="afterCreatePost($event)"
+      ></app-create-post>
+      <div *ngFor="let post of listPosts">
+        <app-posts
+          [profile]="profile"
+          [post]="post"
+          (postUpdate)="onUpdatePost($event)"
+          (postDelete)="onDeletePost($event)"
+          (postShare)="onSharePost($event)"
+        ></app-posts>
+      </div>
+      <div style="color:#ffffff">{{errorMessage}}</div>
     </div>
   </div>
 </div>
+

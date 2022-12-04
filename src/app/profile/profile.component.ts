@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { ListChatComponent } from '../list-chat/list-chat.component';
+import { ListFriendsComponent } from '../list-friends/list-friends.component';
 import { AuthenticationService } from '../_service/auth-service/authentication.service';
 import { DataService } from '../_service/data-service/data.service';
 import { PostService } from '../_service/post-service/post.service';
-import { ProfileService } from '../_service/profile-service/profile.service';
 import { WebsocketService } from '../_service/websocket-service/websocket.service';
 
 @Component({
@@ -13,10 +12,16 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  @ViewChild('appListFriend') appListFriend !: ListChatComponent;
+  @ViewChild('appListFriend') appListFriend !: ListFriendsComponent;
   profile:any={};
+  user:any={};
   listPosts:any[]=[];
-
+  page!:number;
+  totalPage!:number;
+  throttle = 300;
+  scrollDistance = 1;
+  errorMessage:string='';
+  selectIndex:number=0;
   constructor(
     private authService: AuthenticationService,
     private websocket: WebsocketService,
@@ -26,10 +31,12 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(){
+    this.page=0;
+    this.user = JSON.parse(localStorage.getItem('auth-user')!);
     this.dataService.receiveProfile.subscribe(
       (profile) => {
         this.profile = profile;
-        this.getListPostByAuthorId(this.profile.id);
+        this.getPosts(this.profile.id, this.profile.id, this.page);
       }
     );
   }
@@ -39,14 +46,64 @@ export class ProfileComponent implements OnInit {
     this.websocket._disconnect();
   }
 
-  getListPostByAuthorId(id:number){
-    this.postService.getPostByAuthorId(id,0,9999).subscribe(res=>{
+  
+  getPosts(authorId: number, id:number,page:number){
+    this.postService.getPosts(authorId, id,this.page,20).subscribe(res=>{
       if(res.success && res.code == 200){
-        this.listPosts=res.data;
+        this.totalPage = res.pagination.total_page;
+        this.page=page;
+        if(page==0) this.listPosts = res.data;
+        else this.listPosts=[...this.listPosts,...res.data];
       } else this.msg.error(res.message);
-    },err=>{
-      this.msg.error(err.message);
     })
   }
+  
+  afterCreatePost(post:any){
+    post.avatar_url = this.profile.avatar_url;
+    post.name = this.profile.name;
+    this.listPosts = [post,...this.listPosts];
+  }
+  
+  onUpdatePost(post:any){
+    let index = this.listPosts.findIndex(x=>x.id ==post.id)
+    this.listPosts.splice(index,1,post);
+  }
 
+  onDeletePost(id:any){
+    const index = this.listPosts.findIndex((x) => x.id == id);
+    this.listPosts.splice(index, 1);
+  }
+
+  
+  onSharePost(post:any) {
+    post.avatar_url = this.profile.avatar_url;
+    post.name = this.profile.name;
+    this.listPosts = [post, ...this.listPosts];
+  }
+
+  onScrollDown(){
+    if(this.selectIndex == 0){
+      this.page++;
+      if(this.page<=this.totalPage-1){
+        this.getPosts(this.user.id, this.user.id, this.page);
+      } else this.errorMessage = 'No more posts...';
+      
+    }
+
+    if(this.selectIndex == 1){
+      if(this.appListFriend.selectIndex == 0){
+        this.appListFriend.pageFriended++;
+        if(this.appListFriend.pageFriended<=this.appListFriend.totalPageFriended-1){
+          this.appListFriend.getListFriend(this.user.id,'FRIENDED',this.appListFriend.pageFriended);
+        }
+      }
+      if(this.appListFriend.selectIndex == 1){
+        this.appListFriend.pageFriendConfirm++;
+        if(this.appListFriend.pageFriendConfirm<=this.appListFriend.totalPageFriendConfirm-1){
+          this.appListFriend.getListFriend(this.user.id,'CONFIRM',this.appListFriend.pageFriendConfirm);
+        }
+      }
+    }
+    
+  }
 }
