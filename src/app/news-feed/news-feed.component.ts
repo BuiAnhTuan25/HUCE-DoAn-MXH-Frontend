@@ -61,6 +61,12 @@ errorMessage:string='';
     this.listPosts.splice(index, 1);
   }
 
+  onSharePost(post:any) {
+    post.avatar_url = this.profile.avatar_url;
+    post.name = this.profile.name;
+    this.listPosts = [post, ...this.listPosts];
+  }
+
   onScrollDown(){
     this.page++;
     if(this.page<=this.totalPage-1){

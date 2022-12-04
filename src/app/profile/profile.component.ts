@@ -74,6 +74,13 @@ export class ProfileComponent implements OnInit {
     this.listPosts.splice(index, 1);
   }
 
+  
+  onSharePost(post:any) {
+    post.avatar_url = this.profile.avatar_url;
+    post.name = this.profile.name;
+    this.listPosts = [post, ...this.listPosts];
+  }
+
   onScrollDown(){
     if(this.selectIndex == 0){
       this.page++;

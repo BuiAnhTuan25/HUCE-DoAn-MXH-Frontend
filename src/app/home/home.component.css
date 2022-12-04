@@ -96,3 +96,8 @@ color: #1890ff;
   font-weight: bold;
   margin-left: 10px;
 }
+
+.dropdown {
+  height: 250px;
+  padding: 10px;
+}

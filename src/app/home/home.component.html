@@ -132,10 +132,11 @@
     <nz-dropdown-menu #notification="nzDropdownMenu">
       <ul
         nz-menu
-        *ngIf="notifications.length > 0"
-        style="height: 250px"
-        class="overflow-y"
+        class="overflow-y dropdown"
       >
+        <li *ngIf="notifications.length <= 0" style="color:#a5a5a5">
+          You don't have any notifications
+        </li>
         <div *ngFor="let noti of notifications">
           <li
             nz-menu-item

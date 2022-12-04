@@ -1,181 +1,212 @@
 <div [ngClass]="postId ? 'main' : ''">
-  <div *ngIf="postId" class="close">
-    <i (click)="goBackHome()" class="fa-solid fa-xmark"></i>
-  </div>
-  <div style="padding-bottom: 10px">
-    <div [ngClass]="postId ? 'post1' : 'post'">
-      <div nz-row>
-        <div nz-col nzSpan="4">
-          <img class="avatar" [src]="post.avatar_url" alt="avatar" />
-        </div>
-        <div nz-col nzSpan="20">
-          <div nz-row >
-            <div nz-col nzSpan="10">
-              <div class="name" (click)="onClickUser(post.author_id)">
-                {{ post.name }}
+  
+    <div *ngIf="postId" class="close">
+      <i (click)="goBackHome()" class="fa-solid fa-xmark"></i>
+    </div>
+    <div class="overflow-y">
+    <div style="padding-bottom: 10px">
+      <div [ngClass]="postId ? 'post1' : 'post'">
+        <div nz-row>
+          <div nz-col nzSpan="4">
+            <img class="avatar" [src]="post.avatar_url" alt="avatar" />
+          </div>
+          <div nz-col nzSpan="20">
+            <div nz-row>
+              <div nz-col nzSpan="10">
+                <div class="name" (click)="onClickUser(post.author_id)">
+                  {{ post.name }}
+                </div>
+              </div>
+              <div nz-col nzSpan="12"></div>
+              <div
+                *ngIf="post.author_id == user.id"
+                nz-dropdown
+                nzTrigger="click"
+                [nzDropdownMenu]="menu"
+                (nzVisibleChange)="onOpenContextMenu(post)"
+                nz-col
+                nzSpan="1"
+                class="icon-post"
+              >
+                <i class="fa-solid fa-ellipsis"></i>
               </div>
             </div>
-            <div nz-col nzSpan="12"></div>
-            <div
-              *ngIf="post.author_id == user.id"
-              nz-dropdown
-              nzTrigger="click"
-              [nzDropdownMenu]="menu"
-              (nzVisibleChange)="onOpenContextMenu(post)"
-              nz-col
-              nzSpan="1"
-              class="icon-post"
-            >
-              <i class="fa-solid fa-ellipsis"></i>
-            </div>
-          </div>
-          <div>
-            <i *ngIf="post.privacy == 'PUBLIC'" class="fa-solid fa-earth-americas"></i>
-            <i *ngIf="post.privacy == 'FRIEND'" class="fa-solid fa-user-group"></i>
-            <i *ngIf="post.privacy == 'PRIVATE'" class="fa-solid fa-lock"></i>
+            <div>
+              <i
+                *ngIf="post.privacy == 'PUBLIC'"
+                class="fa-solid fa-earth-americas"
+              ></i>
+              <i
+                *ngIf="post.privacy == 'FRIEND'"
+                class="fa-solid fa-user-group"
+              ></i>
+              <i *ngIf="post.privacy == 'PRIVATE'" class="fa-solid fa-lock"></i>
               {{ post.posting_time }}
             </div>
+          </div>
         </div>
-      </div>
-      <div *ngIf="!post.is_share" class="title">
-        <span *ngIf="isShowMore">{{ post.content.slice(0,300) }}</span>
-        <span *ngIf="isShowMore && post.content.length>300" style="color:#ffffff">...</span>
-        <span class="show-more" *ngIf="isShowMore && post.content.length>300" (click)="onClickReadMore()">more</span>
-        <span *ngIf="!isShowMore">{{post.content}}</span>
-        <div class="show-more" *ngIf="!isShowMore" (click)="onClickReadMore()">less</div>
-      </div>
-      <div *ngIf="post.is_share" class="title">
-        <a [href]="post.content">{{post.content}}</a>
-      </div>
-      <div *ngIf="post.picture_url">
-        <img class="image" [src]="post.picture_url" alt="avatar" />
-      </div>
-      <div class="likes">{{ post.count_likes }} Likes</div>
-      <div class="or1"></div>
-      <div nz-row>
-        <div (click)="onClickLike()" nz-col [ngClass]="post.is_like? 'button button-select' : 'button'">
-          <i *ngIf="!post.is_like" class="fa-regular fa-heart icon"></i>
-          <i *ngIf="post.is_like" class="fa-solid fa-heart icon"></i>
-          Like
-        </div>
-        <div
-          nz-col
-          (click)="onClickComment()"
-          [ngClass]="isVisibleComment ? 'button button-select' : 'button'"
-        >
-          <i *ngIf="!isVisibleComment" class="fa-regular fa-comment icon"></i>
-          <i *ngIf="isVisibleComment" class="fa-solid fa-comment icon"></i>
-          Comment
-        </div>
-        <div nz-col class="button" (click)="openModalEdit(true)">
-          <i class="fa-solid fa-share icon"></i>Share
-        </div>
-      </div>
-      <div class="or1"></div>
-      <div *ngIf="isVisibleComment">
-        <div nz-row class="comment">
-          <textarea
-            nz-col
-            nzSpan="16"
-            nz-input
-            [(ngModel)]="commentContent"
-            [nzAutosize]="{ minRows: 1, maxRows: 1 }"
-            placeholder="Write something"
-          ></textarea>
-          <nz-upload
-            nzAction="http://localhost:8080/api/v1/upload"
-            [nzHeaders]="{ authorization: 'authorization-text' }"
-            [nzShowUploadList]="false"
-            [nzBeforeUpload]="beforeUpload"
-            (nzChange)="handleChange($event)"
+        <div *ngIf="!post.is_share" class="title">
+          <span *ngIf="isShowMore">{{ post.content.slice(0, 300) }}</span>
+          <span
+            *ngIf="isShowMore && post.content.length > 300"
+            style="color: #ffffff"
+            >...</span
           >
-          <i class="fa-regular fa-image icon-image-upload"></i>
-          </nz-upload>
-          <button
-            class="button-comment"
-            nz-button
-            nz-col
-            nzSpan="5"
-            nzType="primary"
-            (click)="onCreateComment()"
-            [nzLoading]="isLoadingComment"
+          <span
+            class="show-more"
+            *ngIf="isShowMore && post.content.length > 300"
+            (click)="onClickReadMore()"
+            >more</span
           >
+          <span *ngIf="!isShowMore">{{ post.content }}</span>
+          <div
+            class="show-more"
+            *ngIf="!isShowMore"
+            (click)="onClickReadMore()"
+          >
+            less
+          </div>
+        </div>
+        <div *ngIf="post.is_share" class="title">
+          <a [href]="post.content">{{ post.content }}</a>
+        </div>
+        <div *ngIf="post.picture_url">
+          <img class="image" [src]="post.picture_url" alt="avatar" />
+        </div>
+        <div class="likes">{{ post.count_likes }} Likes</div>
+        <div class="or1"></div>
+        <div nz-row>
+          <div
+            (click)="onClickLike()"
+            nz-col
+            [ngClass]="post.is_like ? 'button button-select' : 'button'"
+          >
+            <i *ngIf="!post.is_like" class="fa-regular fa-heart icon"></i>
+            <i *ngIf="post.is_like" class="fa-solid fa-heart icon"></i>
+            Like
+          </div>
+          <div
+            nz-col
+            (click)="onClickComment()"
+            [ngClass]="isVisibleComment ? 'button button-select' : 'button'"
+          >
+            <i *ngIf="!isVisibleComment" class="fa-regular fa-comment icon"></i>
+            <i *ngIf="isVisibleComment" class="fa-solid fa-comment icon"></i>
             Comment
-          </button>
+          </div>
+          <div nz-col class="button" (click)="openModalEdit(true)">
+            <i class="fa-solid fa-share icon"></i>Share
+          </div>
         </div>
-        <div nz-row *ngIf="pictureUrl" style="margin-top:5px">
-          <img [src]="pictureUrl" class="picture-comment" />
-          <i (click)="onDeleteImageSelect()" class="fa-solid fa-xmark icon-delete-image"></i>
-        </div>
-        <div class="list-comment">
-          <div *ngFor="let comment of websocket.receiverComment">
-            <div *ngIf="comment.post_id == post.id" nz-row class="comment1">
-              <div nz-col>
-                <img
-                  class="avatar-comment"
-                  [src]="comment.avatar_url"
-                  alt="avatar"
-                />
-              </div>
-              <div
-                nz-col
-                class="content-comment"
-                nz-tooltip
-                [nzTooltipTitle]="comment.comment_time"
-                nzTooltipPlacement="right"
-                (contextmenu)="contextMenu($event, menu, comment)"
-              >
-                <div
-                  class="name-comment"
-                  (click)="onClickUser(comment.user_id)"
-                >
-                  {{ comment.name }}
-                </div>
-                <div *ngIf="comment.content">
-                  {{ comment.content }}
-                </div>
-                <div *ngIf="comment.picture_url">
+        <div class="or1"></div>
+        <div *ngIf="isVisibleComment">
+          <div nz-row class="comment">
+            <textarea
+              nz-col
+              nzSpan="16"
+              nz-input
+              [(ngModel)]="commentContent"
+              [nzAutosize]="{ minRows: 1, maxRows: 1 }"
+              placeholder="Write something"
+            ></textarea>
+            <nz-upload
+              nzAction="http://localhost:8080/api/v1/upload"
+              [nzHeaders]="{ authorization: 'authorization-text' }"
+              [nzShowUploadList]="false"
+              [nzBeforeUpload]="beforeUpload"
+              (nzChange)="handleChange($event)"
+            >
+              <i class="fa-regular fa-image icon-image-upload"></i>
+            </nz-upload>
+            <button
+              class="button-comment"
+              nz-button
+              nz-col
+              nzSpan="5"
+              nzType="primary"
+              (click)="onCreateComment()"
+              [nzLoading]="isLoadingComment"
+            >
+              Comment
+            </button>
+          </div>
+          <div nz-row *ngIf="pictureUrl" style="margin-top: 5px">
+            <img [src]="pictureUrl" class="picture-comment" />
+            <i
+              (click)="onDeleteImageSelect()"
+              class="fa-solid fa-xmark icon-delete-image"
+            ></i>
+          </div>
+          <div class="list-comment">
+            <div *ngFor="let comment of websocket.receiverComment">
+              <div *ngIf="comment.post_id == post.id" nz-row class="comment1">
+                <div nz-col>
                   <img
-                  class="picture-comment1"
-                  [src]="comment.picture_url"
-                  alt="picture"
-                />
+                    class="avatar-comment"
+                    [src]="comment.avatar_url"
+                    alt="avatar"
+                  />
+                </div>
+                <div
+                  nz-col
+                  class="content-comment"
+                  nz-tooltip
+                  [nzTooltipTitle]="comment.comment_time"
+                  nzTooltipPlacement="right"
+                  (contextmenu)="contextMenu($event, menu, comment)"
+                >
+                  <div
+                    class="name-comment"
+                    (click)="onClickUser(comment.user_id)"
+                  >
+                    {{ comment.name }}
+                  </div>
+                  <div *ngIf="comment.content">
+                    {{ comment.content }}
+                  </div>
+                  <div *ngIf="comment.picture_url">
+                    <img
+                      class="picture-comment1"
+                      [src]="comment.picture_url"
+                      alt="picture"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div *ngFor="let comment of listComment">
-            <div nz-row class="comment1">
-              <div nz-col>
-                <img
-                  class="avatar-comment"
-                  [src]="comment.avatar_url"
-                  alt="avatar"
-                />
-              </div>
-              <div
-                nz-col
-                class="content-comment"
-                nz-tooltip
-                [nzTooltipTitle]="comment.comment_time"
-                nzTooltipPlacement="right"
-                (contextmenu)="contextMenu($event, menu, comment)"
-              >
-                <div
-                  class="name-comment"
-                  (click)="onClickUser(comment.user_id)"
-                >
-                  {{ comment.name }}
-                </div>
-                <div *ngIf="comment.content">
-                  {{ comment.content }}
-                </div>
-                <div *ngIf="comment.picture_url">
+            <div *ngFor="let comment of listComment">
+              <div nz-row class="comment1">
+                <div nz-col>
                   <img
-                  class="picture-comment1"
-                  [src]="comment.picture_url"
-                  alt="picture"
-                />
+                    class="avatar-comment"
+                    [src]="comment.avatar_url"
+                    alt="avatar"
+                  />
+                </div>
+                <div
+                  nz-col
+                  class="content-comment"
+                  nz-tooltip
+                  [nzTooltipTitle]="comment.comment_time"
+                  nzTooltipPlacement="right"
+                  (contextmenu)="contextMenu($event, menu, comment)"
+                >
+                  <div
+                    class="name-comment"
+                    (click)="onClickUser(comment.user_id)"
+                  >
+                    {{ comment.name }}
+                  </div>
+                  <div *ngIf="comment.content">
+                    {{ comment.content }}
+                  </div>
+                  <div *ngIf="comment.picture_url">
+                    <img
+                      class="picture-comment1"
+                      [src]="comment.picture_url"
+                      alt="picture"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,7 +226,13 @@
       <i class="fa-solid fa-trash-can icon-drop"></i> Delete
     </li>
   </ul>
-  <ul nz-menu *ngIf="typeContext =='comment' && (user.id == post.author_id || user.id == commentSelect.user_id)">
+  <ul
+    nz-menu
+    *ngIf="
+      typeContext == 'comment' &&
+      (user.id == post.author_id || user.id == commentSelect.user_id)
+    "
+  >
     <li nz-menu-item (click)="onDeleteComment()">
       <i class="fa-solid fa-trash-can icon-drop"></i> Delete
     </li>
