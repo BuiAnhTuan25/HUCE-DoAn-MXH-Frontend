@@ -18,6 +18,7 @@
           [post]="post"
           (postUpdate)="onUpdatePost($event)"
           (postDelete)="onDeletePost($event)"
+          (postShare)="onSharePost($event)"
         ></app-posts>
       </div>
       <div style="color:#ffffff">{{errorMessage}}</div>

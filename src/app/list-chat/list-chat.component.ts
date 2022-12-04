@@ -52,20 +52,22 @@ export class ListChatComponent implements OnInit {
       }
     });
     this.dataService.receiveFirstChat.subscribe((firstChat) => {
-      if (firstChat.id != this.listFriendShow[0].id) {
+      if (this.listFriendShow.length > 0 && firstChat.id != this.listFriendShow[0].id) {
         this.listFriendShow = this.listFriendShow.filter((friend) => {
           return friend.id != firstChat.id;
         });
-        this.listFriendShow = [firstChat, ...this.listFriendShow];
-        this.listFriendShow.pop();
-        this.friends.pop();
-        if(firstChat.is_send && firstChat.id != this.chatingWith.id){
+        if(firstChat.is_send && ( !this.chatingWith || firstChat.id != this.chatingWith.id ) ){
           this.index++;
           firstChat.isNotSeen = true;
         }else {
           this.index = 0;
         }
       }
+      this.listFriendShow = [firstChat, ...this.listFriendShow];
+        if(this.listFriendShow.length > 20) {
+          this.listFriendShow.pop();
+          this.friends.pop();
+        }
     });
     this.dataService.receiveActiveStatusFriend.subscribe((msg) => {
       this.friends.forEach((friend) => {

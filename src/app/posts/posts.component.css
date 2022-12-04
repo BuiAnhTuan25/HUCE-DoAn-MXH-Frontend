@@ -11,8 +11,40 @@
   color: #ffffff;
   position: fixed;
 }
+
+ 
+.overflow-y{
+  position: relative;
+  height: 90%; 
+  overflow: hidden auto;
+}
+/* .overflow-y::-webkit-scrollbar { 
+  width: 0 !important;
+  display: none; 
+} */
+/* width */
+.overflow-y::-webkit-scrollbar {
+width: 5px;
+}
+
+/* Track */
+.overflow-y::-webkit-scrollbar-track {
+
+border-radius: 10px;
+}
+
+/* Handle */
+.overflow-y::-webkit-scrollbar-thumb {
+background: #7e7e7e; 
+border-radius: 10px;
+}
+/* Handle on hover */
+/* .overflow-y::-webkit-scrollbar-thumb:hover {
+cursor: pointer;
+} */
+
 .close{
-  margin-top: 20px;
+  /* margin-top: 20px; */
   margin-left: 30px;
   font-size: 30px;
   cursor: pointer;
@@ -59,7 +91,7 @@
 .image{
     width: 100%;
     margin-top: 20px;
-    height:450px;
+    max-height:600px;
 }
 .likes{
     margin-left: 2.5%;

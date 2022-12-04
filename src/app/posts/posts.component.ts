@@ -24,6 +24,7 @@ import { WebsocketService } from '../_service/websocket-service/websocket.servic
 export class PostsComponent implements OnInit {
   @Output() postUpdate = new EventEmitter<any>();
   @Output() postDelete = new EventEmitter<any>();
+  @Output() postShare = new EventEmitter<any>();
   @Input() post: any = {};
   @Input() profile: any = {};
   user: any = {};
@@ -339,6 +340,7 @@ export class PostsComponent implements OnInit {
         this.isLoading = false;
         this.msg.success(res.message);
         this.closeModalEdit();
+        this.postShare.emit(res.data);
       } else {
         this.isLoading = false;
         this.msg.error(res.message);
