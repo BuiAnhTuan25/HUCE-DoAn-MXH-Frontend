@@ -50,22 +50,22 @@
     height: 40px;
     margin-left: 30px;
     border-radius: 20px;
-    background:#5f5f5f;
-    border:none;
-    color: #ffffff;
+    /* background:#5f5f5f; */
+    /* border:none; */
+    /* color: #ffffff; */
 }
 
 :host ::ng-deep .ant-select-single:not(.ant-select-customize-input) .ant-select-selector{
     height: 40px;
     border-radius: 20px;
-    background:#5f5f5f;
-    border:none;
-    color: #ffffff;
+    /* background:#5f5f5f; */
+    /* border:none; */
+    /* color: #ffffff; */
 }
 
-:host ::ng-deep .ant-select-clear {
+/* :host ::ng-deep .ant-select-clear {
   background:#5f5f5f;
-}
+} */
 
 /* :host ::ng-deep .ant-select-arrow {
     margin-top:0px;
