@@ -9,11 +9,11 @@
     margin-bottom: 20px;
   }
   :host ::ng-deep .avatar-uploader > .ant-upload {
-    color:#ffffff;
+    /* color:#ffffff; */
     border-radius: 10px;
     width: 100px;
     height: 100px;
-    background-color:  #5f5f5f;
+    /* background-color:  #5f5f5f; */
   }
 
   .avatar{
@@ -26,9 +26,9 @@
   }
  
 textarea{
-    color:#ffffff;
-    background-color: #5f5f5f;
-    border: none;
+    /* color:#ffffff; */
+    /* background-color: #5f5f5f; */
+    /* border: none; */
     border-radius: 15px;
 }
 .privacy{
