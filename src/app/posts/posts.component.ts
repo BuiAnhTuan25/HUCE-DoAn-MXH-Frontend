@@ -41,10 +41,15 @@ export class PostsComponent implements OnInit {
   listComment: any[] = [];
   commentContent: string = '';
   commentSelect: any;
-  typeContext='';
-  isLoadingComment:boolean=false;
-  isShowMore=true;
+  typeContext = '';
+  isLoadingComment: boolean = false;
+  isShowMore = true;
   titleModal: string = '';
+  likes: any[] = [];
+  throttle = 300;
+  scrollDistance = 1;
+  pageLike: number = 0;
+  totalPageLike: number = 0;
   constructor(
     private postService: PostService,
     private msg: NzMessageService,
@@ -56,7 +61,7 @@ export class PostsComponent implements OnInit {
     private dataService: DataService,
     private nzContextMenuService: NzContextMenuService,
     public websocket: WebsocketService,
-    private likeService: LikeService,
+    private likeService: LikeService
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +72,7 @@ export class PostsComponent implements OnInit {
     }
     this.initForm();
   }
-  initForm(){
+  initForm() {
     this.postForm = this.fb.group({
       id: [''],
       author_id: [this.user.id],
@@ -76,7 +81,7 @@ export class PostsComponent implements OnInit {
       picture_url: [''],
       privacy: [PRIVACY.PUBLIC],
       posting_time: [''],
-      is_share: [false]
+      is_share: [false],
     });
   }
 
@@ -92,20 +97,22 @@ export class PostsComponent implements OnInit {
   openModalEdit(isShare: boolean) {
     this.isShare = isShare;
     this.isVisible = true;
-    if(isShare) {
+    if (isShare) {
       this.titleModal = 'Share post';
       this.initForm();
       this.postForm.controls['is_share'].setValue(true);
-      if(this.post.is_share){
+      if (this.post.is_share) {
         this.postForm.controls['content'].setValue(this.post.content);
       } else {
-        this.postForm.controls['content'].setValue('http://localhost:4200/post/'+this.post.id);
+        this.postForm.controls['content'].setValue(
+          'http://localhost:4200/post/' + this.post.id
+        );
       }
     } else {
       this.titleModal = 'Update post';
       this.postForm.patchValue(this.postSelect);
+      this.pictureUrl = this.postSelect.picture_url;
     }
-    
   }
   closeModalEdit() {
     this.isVisible = false;
@@ -114,7 +121,7 @@ export class PostsComponent implements OnInit {
   }
 
   getPostById(id: any) {
-    this.postService.getPost(id,this.user.id).subscribe((res) => {
+    this.postService.getPost(id, this.user.id).subscribe((res) => {
       if (res.success && res.code == 200) {
         this.post = res.data;
       } else this.msg.error(res.message);
@@ -122,37 +129,36 @@ export class PostsComponent implements OnInit {
   }
 
   savePost() {
-    if(this.isShare) {
+    if (this.isShare) {
       this.share();
     } else this.update();
-
   }
 
   update() {
     this.isLoading = true;
     this.postService
-    .updatePost(
-      this.postForm.value,
-      this.postForm.controls['id'].value,
-      this.file
-    )
-    .subscribe(
-      (res) => {
-        if (res.success && res.code == 200) {
+      .updatePost(
+        this.postForm.value,
+        this.postForm.controls['id'].value,
+        this.file
+      )
+      .subscribe(
+        (res) => {
+          if (res.success && res.code == 200) {
+            this.isLoading = false;
+            this.postUpdate.emit(res.data);
+            this.msg.success('Update post successfully!');
+            this.closeModalEdit();
+          } else {
+            this.isLoading = false;
+            this.msg.error(res.message);
+          }
+        },
+        (err) => {
           this.isLoading = false;
-          this.postUpdate.emit(res.data);
-          this.msg.success('Update post successfully!');
-          this.closeModalEdit();
-        } else {
-          this.isLoading = false;
-          this.msg.error(res.message);
+          this.msg.error(err.detail);
         }
-      },
-      (err) => {
-        this.isLoading = false;
-        this.msg.error(err.detail);
-      }
-    );
+      );
   }
 
   deletePost() {
@@ -217,25 +223,27 @@ export class PostsComponent implements OnInit {
     }
   }
 
-  onClickLike(){
-    if(this.post.is_like){
-      this.likeService.deleteLike(this.post.id,this.user.id).subscribe(res=>{
-        if(res.success && res.code == 200){
-          this.post.is_like = false;
-          this.post.count_likes--;
-        } else this.msg.error(res.message);
-      });
+  onClickLike() {
+    if (this.post.is_like) {
+      this.likeService
+        .deleteLike(this.post.id, this.user.id)
+        .subscribe((res) => {
+          if (res.success && res.code == 200) {
+            this.post.is_like = false;
+            this.post.count_likes--;
+          } else this.msg.error(res.message);
+        });
     } else {
-      const like={
-        post_id:this.post.id,
-        user_id:this.user.id
-      }
-      this.likeService.createLike(like).subscribe(res=>{
-        if(res.success && res.code == 200){
+      const like = {
+        post_id: this.post.id,
+        user_id: this.user.id,
+      };
+      this.likeService.createLike(like).subscribe((res) => {
+        if (res.success && res.code == 200) {
           this.post.is_like = true;
           this.post.count_likes++;
         } else this.msg.error(res.message);
-      })
+      });
     }
   }
 
@@ -278,18 +286,18 @@ export class PostsComponent implements OnInit {
         name: this.profile.name,
         avatar_url: this.profile.avatar_url,
       };
-      this.isLoadingComment=true;
+      this.isLoadingComment = true;
       this.commentService.createComment(comment, this.file).subscribe((res) => {
         if (res.success && res.code == 200) {
-          this.isLoadingComment=false;
+          this.isLoadingComment = false;
           this.commentContent = '';
           // this.listComment = [res.data, ...this.listComment];
           this.onDeleteImageSelect();
         } else {
-          this.isLoadingComment=false;
+          this.isLoadingComment = false;
           this.msg.error(res.message);
           this.onDeleteImageSelect();
-        } 
+        }
       });
     }
   }
@@ -312,7 +320,7 @@ export class PostsComponent implements OnInit {
   ): void {
     this.nzContextMenuService.create($event, menu);
     this.commentSelect = data;
-    this.typeContext='comment';
+    this.typeContext = 'comment';
   }
 
   closeMenu(): void {
@@ -329,26 +337,47 @@ export class PostsComponent implements OnInit {
     );
   }
 
-  onClickReadMore(){
-    this.isShowMore=!this.isShowMore;
+  onClickReadMore() {
+    this.isShowMore = !this.isShowMore;
   }
 
   share() {
     this.isLoading = true;
-    this.postService.createPost(this.postForm.value).subscribe(res=>{
-      if(res.success) {
+    this.postService.createPost(this.postForm.value).subscribe(
+      (res) => {
+        if (res.success) {
+          this.isLoading = false;
+          this.msg.success(res.message);
+          this.closeModalEdit();
+          this.postShare.emit(res.data);
+        } else {
+          this.isLoading = false;
+          this.msg.error(res.message);
+        }
+      },
+      (err) => {
         this.isLoading = false;
-        this.msg.success(res.message);
-        this.closeModalEdit();
-        this.postShare.emit(res.data);
-      } else {
-        this.isLoading = false;
-        this.msg.error(res.message);
+        this.msg.error(err.detail);
       }
-    },
-    (err) => {
-      this.isLoading = false;
-      this.msg.error(err.detail);
-    })
+    );
+  }
+
+  getLikes() {
+    this.likeService
+      .getLikes(this.post.id, this.pageLike, 20)
+      .subscribe((res) => {
+        if (res.success) {
+          if (this.pageLike == 0) this.likes = res.data;
+          else this.likes = [...this.likes, ...res.data];
+          this.totalPageLike = res.pagination.total_page;
+        }
+      });
+  }
+
+  onScrollLikesDown() {
+    this.pageLike++;
+    if (this.pageLike <= this.totalPageLike - 1) {
+      this.getLikes();
+    }
   }
 }
