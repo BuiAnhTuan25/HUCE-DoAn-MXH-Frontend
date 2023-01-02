@@ -27,7 +27,7 @@
     <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.phone_number }}</div>
     <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.address }}</div>
     <div *ngIf="profile.id == user.id || profile.is_public" class="about">{{ profile?.gender }}</div>
-    <div (click)="openChangePassword()" *ngIf="profile?.id == user.id" class="change-password">Change password</div>
+    <div (click)="openChangePassword()" *ngIf="profile?.id == user.id && user?.provider == 'DEFAULT'" class="change-password">Change password</div>
     <div style="margin-top:10px">
       
       <button (click)="createFriend()" *ngIf="profile?.id != user.id && !friend" nz-button class="button-add" nzType="default">
