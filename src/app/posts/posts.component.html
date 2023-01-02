@@ -1,9 +1,8 @@
 <div [ngClass]="postId ? 'main' : ''">
-  
-    <div *ngIf="postId" class="close">
-      <i (click)="goBackHome()" class="fa-solid fa-xmark"></i>
-    </div>
-    <div class="overflow-y">
+  <div *ngIf="postId" class="close">
+    <i (click)="goBackHome()" class="fa-solid fa-xmark"></i>
+  </div>
+  <div class="overflow-y">
     <div style="padding-bottom: 10px">
       <div [ngClass]="postId ? 'post1' : 'post'">
         <div nz-row>
@@ -73,7 +72,15 @@
         <div *ngIf="post.picture_url">
           <img class="image" [src]="post.picture_url" alt="avatar" />
         </div>
-        <div class="likes">{{ post.count_likes }} Likes</div>
+        <div
+          (click)="getLikes()"
+          class="likes"
+          nz-dropdown
+          nzTrigger="click"
+          [nzDropdownMenu]="menuLike"
+        >
+          {{ post.count_likes }} Likes
+        </div>
         <div class="or1"></div>
         <div nz-row>
           <div
@@ -218,10 +225,10 @@
 </div>
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu *ngIf="typeContext == 'post' && postSelect">
-    <li nz-menu-item (click)="openModalEdit(false)">
+    <li nz-menu-item *ngIf="!post.is_share" (click)="openModalEdit(false)">
       <i class="fa-solid fa-pen-to-square icon-drop"></i>Edit post
     </li>
-    <li nz-menu-divider></li>
+    <li nz-menu-divider *ngIf="!post.is_share"></li>
     <li nz-menu-item (click)="deletePost()">
       <i class="fa-solid fa-trash-can icon-drop"></i> Delete
     </li>
@@ -236,6 +243,28 @@
     <li nz-menu-item (click)="onDeleteComment()">
       <i class="fa-solid fa-trash-can icon-drop"></i> Delete
     </li>
+  </ul>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #menuLike="nzDropdownMenu">
+  <ul
+    nz-menu
+    class="overflow-y dropdown"
+    infinite-scroll
+    [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollThrottle]="throttle"
+    [scrollWindow]="false"
+    (scrolled)="onScrollLikesDown()"
+  >
+    <li *ngIf="likes.length <= 0" style="color: #a5a5a5">
+      Be the first to like this post
+    </li>
+    <div *ngFor="let like of likes">
+      <li nz-menu-item (click)="onClickUser(like.user_id)">
+        <img class="avatar-like" [src]="like.avatar_url" alt="avatar" />
+        {{ like.name }}
+      </li>
+    </div>
   </ul>
 </nz-dropdown-menu>
 
@@ -269,7 +298,7 @@
             ></i>
             <div class="ant-upload-text text">Upload</div>
           </ng-container>
-          <img *ngIf="pictureUrl" [src]="pictureUrl" class="avatar" />
+          <img *ngIf="pictureUrl" [src]="pictureUrl" class="picture" />
         </nz-upload>
         <div nz-col nzSpan="18">
           <nz-form-item>

@@ -56,14 +56,16 @@ export class ListChatComponent implements OnInit {
         this.listFriendShow = this.listFriendShow.filter((friend) => {
           return friend.id != firstChat.id;
         });
+        console.log(firstChat);
+        console.log(this.chatingWith);
         if(firstChat.is_send && ( !this.chatingWith || firstChat.id != this.chatingWith.id ) ){
           this.index++;
           firstChat.isNotSeen = true;
         }else {
           this.index = 0;
         }
+        this.listFriendShow = [firstChat, ...this.listFriendShow];
       }
-      this.listFriendShow = [firstChat, ...this.listFriendShow];
         if(this.listFriendShow.length > 20) {
           this.listFriendShow.pop();
           this.friends.pop();
@@ -91,7 +93,7 @@ export class ListChatComponent implements OnInit {
             this.dataService.sendFirstChat(chatWith);
           }
         })
-      } else this.listFriendShow[0].isNotSeen = true;
+      } else this.dataService.sendFirstChat(this.listFriendShow[0]);
     })
   }
 

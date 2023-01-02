@@ -72,6 +72,12 @@ cursor: pointer;
     height: 50px;
     border-radius: 50%;
 }
+
+.picture {
+  width:100px;
+  height: 100px;
+}
+
 .name{
     cursor: pointer;
     font-size: 16px;
@@ -96,6 +102,10 @@ cursor: pointer;
 .likes{
     margin-left: 2.5%;
     margin-top: 10px;
+    cursor: pointer;
+}
+.likes:hover{
+  text-decoration: underline;
 }
 .or1 {
     background-color: #7e7e7e;
@@ -230,4 +240,15 @@ cursor: pointer;
 .show-more:hover{
   text-decoration:underline;
   cursor: pointer;
+}
+.avatar-like {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.dropdown {
+  width: 250px;
+  max-height: 350px;
+  padding: 10px;
 }
